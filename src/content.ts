@@ -27,16 +27,16 @@ export const events = [
     venue: 'Heritage Square',
     date: 'September 2026',
     month: 'SEP',
-    image: 'images/concert-wide.webp',
+    image: '/images/concert-wide.webp',
     description: 'Piano, clarinet, and a room brought together by music. A few moments from our visit to Heritage Square.',
-    gallery: ['images/concert-wide.webp', 'images/concert-portrait.webp', 'images/concert-moment.webp'],
+    gallery: ['/images/concert-wide.webp', '/images/concert-portrait.webp', '/images/concert-moment.webp'],
   },
 ];
 
 // Temporary performance examples from the supplied reference website.
 // These are explicitly labelled samples, not recordings of Fermata events.
 export const videos = [
-  { id: '7mefYOLnADI', title: 'Like Someone in Love', category: 'Jazz piano', image: 'images/video-jazz.webp' },
-  { id: 'FEHCJHAtehQ', title: 'Rachmaninov, Concerto No. 3', category: 'Classical piano', image: 'images/video-classical.webp' },
-  { id: 'oconJTVC3WI', title: 'The Gardens of Buitenzorg', category: 'Solo piano', image: 'images/video-solo.webp' },
+  { id: '7mefYOLnADI', title: 'Like Someone in Love', category: 'Jazz piano', image: '/images/video-jazz.webp' },
+  { id: 'FEHCJHAtehQ', title: 'Rachmaninov, Concerto No. 3', category: 'Classical piano', image: '/images/video-classical.webp' },
+  { id: 'oconJTVC3WI', title: 'The Gardens of Buitenzorg', category: 'Solo piano', image: '/images/video-solo.webp' },
 ];
