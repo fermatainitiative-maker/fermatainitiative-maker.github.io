@@ -8,6 +8,7 @@ import '@fontsource/outfit/500.css';
 import '@fontsource/outfit/600.css';
 import { events, site, videos } from './content';
 import './styles.css';
+import { PreviewGate } from './PreviewGate';
 
 const nav = [{ to: '/about', label: 'About us' }, { to: '/events', label: 'Past events' }, { to: '/videos', label: 'Watch & listen' }, { to: '/contact', label: 'Contact' }];
 const icons = { Instagram, YouTube: Youtube, Facebook };
@@ -188,4 +189,4 @@ if (window.location.hash.startsWith('#/')) {
   window.history.replaceState(null, '', window.location.hash.slice(1));
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><PreviewGate><App /></PreviewGate></React.StrictMode>);
