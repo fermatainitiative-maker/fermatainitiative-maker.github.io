@@ -25,15 +25,15 @@ export function PreviewGate({ children }: { children: ReactNode }) {
 
   if (unlocked) return children;
 
-  return <main className="coming-soon">
-    <img className="coming-soon-logo" src="/images/logo.png" alt="The Fermata Initiative" width="180" height="144" />
-    <div className="coming-soon-content">
-      <svg className="coming-soon-mark" viewBox="0 0 160 100" fill="none" aria-hidden="true"><path d="M14 80a66 66 0 0 1 132 0" stroke="currentColor" strokeWidth="7" strokeLinecap="round" /><circle cx="80" cy="77" r="11" fill="currentColor" /></svg>
-      <p className="coming-soon-eyebrow">A little pause before the music.</p>
+  return <main className="preview-curtain">
+    <img className="preview-curtain-logo" src="/images/logo.png" alt="The Fermata Initiative" width="180" height="144" />
+    <div className="preview-curtain-content">
+      <svg className="preview-curtain-mark" viewBox="0 0 160 100" fill="none" aria-hidden="true"><path d="M14 80a66 66 0 0 1 132 0" stroke="currentColor" strokeWidth="7" strokeLinecap="round" /><circle cx="80" cy="77" r="11" fill="currentColor" /></svg>
+      <p className="preview-curtain-eyebrow">A little pause before the music.</p>
       <h1><button type="button" onClick={reveal}>Coming soon.</button></h1>
-      <p className="coming-soon-description">Bringing live music and shared moments to retirement communities across Newfoundland.</p>
-      <span className="coming-soon-rule" aria-hidden="true" />
-      <p className="coming-soon-note">We look forward to welcoming you.</p>
+      <p className="preview-curtain-description">Bringing live music and shared moments to retirement communities across Newfoundland.</p>
+      <span className="preview-curtain-rule" aria-hidden="true" />
+      <p className="preview-curtain-note">We look forward to welcoming you.</p>
     </div>
     <footer>© {new Date().getFullYear()} The Fermata Initiative</footer>
   </main>;
