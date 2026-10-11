@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. Use `localhost`, since that is the origin configured for the supplied Web3Forms key.
+Open http://localhost:5173. The site also runs as static files on GitHub Pages.
 
 ```sh
 npm run build
@@ -42,7 +42,7 @@ The supplied Web3Forms public access key is connected in `content.ts`. To overri
 
 The form includes required-field and email validation, a hidden honeypot, a sending state, a success state, timeout handling, and errors that retain the entered message. No real test submission was sent during development.
 
-For deployment on a real domain, update your Web3Forms allowed-domain configuration. Reference: [Web3Forms API](https://docs.web3forms.com/getting-started/api-reference).
+If domain restrictions are enabled for your Web3Forms key, allow `fermatainitiative.org`, `www.fermatainitiative.org`, and (for previewing) `fermatainitiative-maker.github.io`. Keep `localhost` only if you still need local form testing. Reference: [Web3Forms API](https://docs.web3forms.com/getting-started/api-reference).
 
 ## Video behaviour
 
@@ -51,3 +51,29 @@ Inspired by the supplied reference's `scripts/video-embed.js`: thumbnails become
 ## Design
 
 Warm cream `#FDFBF7`, Fermata blue `#376983`, sage `#607E61`, deep green `#49654B`, gold `#E0A62B`. The supplied logo is preserved. Layouts adapt for phones, tablets, and desktops; dialogs manage keyboard focus; reduced-motion preferences are respected.
+
+## GitHub Pages deployment
+
+Repository: https://github.com/fermatainitiative-maker/fermatainitiative-maker.github.io
+
+Website: https://fermatainitiative.org
+
+Every push to main runs the build and deployment workflow in .github/workflows/deploy.yml. It installs locked dependencies, checks TypeScript, builds the site, and publishes only dist/. The workflow can also be started manually from the Actions tab. No paid hosting or server is required. GitHub Pages provides the HTTPS certificate.
+
+The repository owner must set Settings → Pages → Build and deployment → Source to GitHub Actions, then set the custom domain to fermatainitiative.org. Collaborators with write access can push code, but cannot change the Pages/domain settings.
+
+After the custom domain is saved in GitHub, configure these records in GoDaddy DNS:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| A | @ | 185.199.108.153 |
+| A | @ | 185.199.109.153 |
+| A | @ | 185.199.110.153 |
+| A | @ | 185.199.111.153 |
+| CNAME | www | fermatainitiative-maker.github.io |
+
+Replace conflicting parking A records at @ and the previous www CNAME. Leave mail, verification, and unrelated records alone. DNS and HTTPS certificate issuance may take up to 24 hours. Once available, enable Enforce HTTPS in the GitHub Pages settings.
+
+The custom domain is managed in the Pages settings. A CNAME file is not used by this GitHub Actions publishing workflow.
+
+Reference: [GitHub custom domain setup](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
