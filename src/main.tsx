@@ -10,7 +10,7 @@ import { events, site, videos } from './content';
 import './styles.css';
 import { PreviewGate } from './PreviewGate';
 
-const nav = [{ to: '/about', label: 'About us' }, { to: '/events', label: 'Past events' }, { to: '/videos', label: 'Watch & listen' }, { to: '/contact', label: 'Contact' }];
+const nav = [{ to: '/', label: 'Home' }, { to: '/about', label: 'About us' }, { to: '/events', label: 'Past events' }, { to: '/videos', label: 'Watch & listen' }, { to: '/contact', label: 'Contact' }];
 const icons = { Instagram, YouTube: Youtube, Facebook };
 
 function SocialLinks() {
@@ -25,7 +25,7 @@ function RouteEffects() {
   const previousPath = useRef(location.pathname);
   useEffect(() => {
     const pathname = location.pathname.replace(/\/$/, '') || '/';
-    const label = nav.find(n => n.to === pathname)?.label || (pathname === '/thank-you' ? 'Thank you' : pathname === '/privacy' ? 'Privacy' : undefined);
+    const label = nav.find(n => n.to === pathname && n.to !== '/')?.label || (pathname === '/thank-you' ? 'Thank you' : pathname === '/privacy' ? 'Privacy' : undefined);
     document.title = `${label || 'Music made to be shared'} | The Fermata Initiative`;
     if (previousPath.current !== location.pathname) {
       const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
@@ -53,7 +53,7 @@ function Header() {
         <Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="mobile-menu">
           <Dialog.Title>Come on in.</Dialog.Title><Dialog.Description>Explore The Fermata Initiative.</Dialog.Description>
           <Dialog.Close className="dialog-close icon-button" aria-label="Close navigation"><X /></Dialog.Close>
-          <nav aria-label="Mobile navigation"><Link to="/">Home</Link>{nav.map(n => <NavLink key={n.to} to={n.to}>{n.label}<ArrowUpRight size={20} /></NavLink>)}</nav>
+          <nav aria-label="Mobile navigation">{nav.map(n => <NavLink key={n.to} to={n.to}>{n.label}<ArrowUpRight size={20} /></NavLink>)}</nav>
           <Link to="/contact?interest=volunteer" className="button button-primary">Get involved <Heart size={18} /></Link>
         </Dialog.Content></Dialog.Portal>
       </Dialog.Root>
@@ -85,7 +85,7 @@ function Home() {
       <div className="hero-copy"><h1>Music made{' '}<span className="hero-title-bridge">to be</span>{' '}<span className="hero-title-shared">shared</span></h1><p>We bring live, volunteer-led concerts to retirement communities in Newfoundland — creating space to listen, smile, and connect.</p><div className="hero-actions"><Link to="/contact?interest=volunteer" className="button button-primary">Be part of the music <ArrowUpRight size={18} /></Link><Link to="/about" className="text-link">Meet Fermata <ArrowRight size={18} /></Link></div></div>
       <div className="hero-visual"><div className="hero-photo"><img src="/images/concert-wide.webp" alt="A pianist and clarinettist sharing live music with retirement community residents" fetchPriority="high" width="1500" height="1000" /></div><div className="photo-caption"><span className="caption-symbol"><MapPin size={24} strokeWidth={1.5} aria-hidden="true" /></span><div><time dateTime="2026-09">September 2026</time><strong>Heritage Square</strong></div></div><FermataMark className="hero-mark" /></div>
     </section>
-    <section className="home-story section"><div className="container story-section"><div className="story-heading"><Eyebrow>Why we come together</Eyebrow><h2>Some things are<br />better <span className="green-text">shared.</span></h2><Link className="text-link" to="/about">Our story <ArrowRight size={18} /></Link></div><div className="story-copy"><p className="large-copy">A familiar melody. A foot tapping along.<br />A conversation that starts with a song.</p><p>Music has a way of bringing us closer. The Fermata Initiative is a Newfoundland-based nonprofit connecting volunteer musicians with retirement communities, one concert at a time.</p><p>Our aim is simple: to make room for joy, connection, and live music in everyday life.</p></div></div></section>
+    <section className="home-story section"><div className="container story-section"><div className="story-heading"><Eyebrow>Why we come together</Eyebrow><h2>Some things are<br />better <span className="green-text">shared.</span></h2><Link className="text-link" to="/about">Our story <ArrowRight size={18} /></Link></div><div className="story-copy"><p className="large-copy">A familiar melody. A foot tapping along.<br /> A conversation that starts with a song.</p><p>Music has a way of bringing us closer. The Fermata Initiative is a Newfoundland-based nonprofit connecting volunteer musicians with retirement communities, one concert at a time.</p><p>Our aim is simple: to make room for joy, connection, and live music in everyday life.</p></div></div></section>
     <section className="moments-section section"><div className="container"><div className="section-heading"><div><Eyebrow>A few shared moments</Eyebrow><h2>Small concerts.<br />Lasting connections.</h2></div><Link to="/events" className="text-link">Explore past events <ArrowRight size={18} /></Link></div><div className="home-event-grid"><Link to="/events#heritage-square" className="featured-event"><div className="event-photo"><img loading="lazy" src="/images/concert-wide.webp" alt="Piano and clarinet performance at Heritage Square" width="1500" height="1000" /><span className="image-tag">From our community</span><span className="round-arrow"><ArrowUpRight /></span></div><div className="featured-event-info"><div><span className="meta">September 2026 · Heritage Square</span><h3>An afternoon, brought to life.</h3></div><span className="event-type">Community concert</span></div></Link><div className="moment-note"><FermataMark /><span className="eyebrow plain">A little pause. A shared experience.</span><h3>That's the<br />Fermata feeling.</h3><p>In music, a fermata invites us to hold a moment a little longer. We believe connection deserves the same.</p><Link to="/about" className="text-link">Get to know us <ArrowRight size={18} /></Link></div></div></div></section>
     <section className="home-videos section"><div className="container"><div className="section-heading"><div><Eyebrow>Press play. Stay a while.</Eyebrow><h2>A little of what music can do.</h2></div><Link to="/videos" className="text-link">Watch & listen <ArrowRight size={18} /></Link></div><VideoCollection compact /></div></section>
     <InvolveBanner />
