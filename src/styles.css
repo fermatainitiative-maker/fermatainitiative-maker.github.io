@@ -32,7 +32,7 @@
   .story-copy p:not(.large-copy), .moment-note p { font-size:18px; line-height:1.7; }
   .moment-note { padding-top:32px; }
   .moment-note .eyebrow { max-width:none; padding-right:80px; }
-  .moment-note>.fermata-mark { width:60px; right:0; top:32px; }
+  .moment-note>.fermata-mark { position:static; display:block; width:60px; margin:0 0 22px; }
   .header-cta { white-space:nowrap; }
 }
 @media (max-width:370px) {
