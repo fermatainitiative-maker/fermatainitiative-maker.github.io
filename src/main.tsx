@@ -95,15 +95,34 @@ function Home() {
   </>;
 }
 
-function PageIntro({ eyebrow, title, children }: { eyebrow: string; title: React.ReactNode; children: React.ReactNode }) {
-  return <section className="page-intro container"><Eyebrow>{eyebrow}</Eyebrow><h1>{title}</h1><p>{children}</p><FermataMark /></section>;
+function PageIntro({ eyebrow, title, children }: { eyebrow?: string; title: React.ReactNode; children: React.ReactNode }) {
+  return <section className="page-intro container">{eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}<h1>{title}</h1><p>{children}</p><FermataMark /></section>;
 }
 
 function About() {
-  return <><PageIntro eyebrow="Hello, we're Fermata" title={<>Making room for<br /><span>music. And each other.</span></>}>A Newfoundland-based nonprofit with a simple belief: a little live music can bring people a little closer.</PageIntro>
-    <section className="container about-feature"><div className="about-photo"><img src="/images/concert-portrait.webp" alt="Residents gathered for a live piano and clarinet concert" width="1000" height="1500" /></div><div><Eyebrow>Our story</Eyebrow><h2>It starts with<br />showing up.</h2><p className="large-copy">A musician brings a song.<br />A community brings it to life.</p><p>We organise volunteer concerts in retirement communities across Newfoundland. By bringing musicians and residents together in familiar spaces, we hope to create moments of joy and connection that everyone can share.</p><p>For us, a concert is more than a performance. It's a reason to gather, a chance to hear something beautiful, and an invitation to spend a little time together.</p><Link className="text-link" to="/contact?interest=volunteer">Join us <ArrowRight size={18} /></Link></div></section>
-    <section className="section container"><div className="section-heading"><div><Eyebrow>What brings us here</Eyebrow><h2>People at the heart.<br />Music in the room.</h2></div></div><div className="principles"><article><span className="principle-icon"><Music2 /></span><h3>Music within reach</h3><p>Bringing the concert to residents, in the places they already call home.</p></article><article><span className="principle-icon"><UsersRound /></span><h3>Time together</h3><p>Creating a welcoming space for residents, families, and musicians to connect.</p></article><article><span className="principle-icon"><Heart /></span><h3>Community spirit</h3><p>Local people sharing their time and their talents to make something meaningful.</p></article></div></section>
-    <section className="name-story"><div className="container"><FermataMark /><div><Eyebrow>Behind the name</Eyebrow><h2>Hold the moment.</h2><p>A fermata is a musical symbol that asks us to hold a note or a pause a little longer. It's a lovely reminder to slow down, listen, and appreciate being together.</p></div></div></section><InvolveBanner /></>;
+  return <><PageIntro title={<>Live music for<br /><span>retirement communities.</span></>}>We’re a Newfoundland nonprofit. Volunteer musicians play live for residents of retirement communities and nursing homes.</PageIntro>
+    <section className="container about-feature">
+      <div className="about-photo"><img src="/images/concert-portrait.webp" alt="Residents gathered for a live piano and clarinet concert" width="1000" height="1500" /></div>
+      <div>
+        <Eyebrow>Our story</Eyebrow>
+        <h2>How it started</h2>
+        <p className="large-copy">We’re a group of musicians and friends who enjoy sharing the music we love with other people.</p>
+        <p>We organise volunteer concerts in retirement communities and nursing homes across Newfoundland. We play classical repertoire, jazz, and pop in common rooms and halls, and talk about the music and why we enjoy it.</p>
+        <p>A concert is a good reason to get together, hear some live music, and spend a bit of time with other people.</p>
+        <Link className="text-link" to="/contact?interest=volunteer">Join us <ArrowRight size={18} /></Link>
+      </div>
+    </section>
+    <section className="section container">
+      <div className="section-heading"><div><Eyebrow>What we care about</Eyebrow><h2>People first.<br />Music in the room.</h2></div></div>
+      <div className="principles">
+        <article><span className="principle-icon"><Music2 /></span><h3>Music within reach</h3><p>We bring the concert to residents, in the places they already live.</p></article>
+        <article><span className="principle-icon"><UsersRound /></span><h3>Time together</h3><p>A relaxed space where residents, families, and musicians can talk and enjoy the music together.</p></article>
+        <article><span className="principle-icon"><Heart /></span><h3>Community</h3><p>Local people giving their time to play for their neighbours.</p></article>
+      </div>
+    </section>
+    <section className="name-story"><div className="container"><FermataMark /><div><h2>Why “Fermata”</h2><p>A fermata is a symbol in sheet music that tells the player to hold a note or a pause longer than written. We liked the idea of slowing down and spending a few minutes together.</p></div></div></section>
+    <InvolveBanner />
+  </>;
 }
 
 function Gallery({ event }: { event: typeof events[number] }) {
