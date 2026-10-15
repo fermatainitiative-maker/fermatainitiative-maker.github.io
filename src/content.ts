@@ -33,7 +33,7 @@ export const events: Concert[] = [
     location: 'Conception Bay South',
     description: 'Piano, clarinet, and a room brought together by music. A few moments from our visit to Heritage Square.',
     media: [
-      { type: 'photo', src: '/images/concert-wide.webp', alt: 'A pianist and clarinettist performing at Heritage Square' },
+      { type: 'photo', src: '/images/heritage-duet.webp', alt: 'A pianist and clarinettist performing at Heritage Square' },
       { type: 'photo', src: '/images/concert-portrait.webp', alt: 'Residents listening to piano and clarinet at Heritage Square', position: '50% 65%' },
       { type: 'photo', src: '/images/concert-moment.webp', alt: 'Musicians and residents sharing a concert in the Heritage Square common room' },
     ],
@@ -44,7 +44,7 @@ export const events: Concert[] = [
     venue: 'Westbury Estates',
     location: 'St. John’s',
     description: 'Another place to come together through live music.',
-    media: [],
+    media: [{ type: 'photo', src: '/images/westbury-piano.webp', alt: 'A pianist performing in the common room at Westbury Estates in St. John’s' }],
   },
 ];
 
