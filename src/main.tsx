@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState, type FormEvent, type MouseEvent } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Link, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { BrowserRouter, Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowDown, ArrowRight, ArrowUpRight, CheckCircle2, ChevronLeft, ChevronRight, Heart, MapPin, Menu, Music2, Play, Send, UsersRound, X, Youtube, Instagram, Facebook, LoaderCircle, CircleHelp } from 'lucide-react';
 import '@fontsource/outfit/400.css';
 import '@fontsource/outfit/500.css';
 import '@fontsource/outfit/600.css';
-import { events, site, videos } from './content';
+import { events, site, videos, type Concert, type ConcertMedia } from './content';
 import './styles.css';
 import { PreviewGate } from './PreviewGate';
 
-const nav = [{ to: '/', label: 'Home' }, { to: '/about', label: 'About us' }, { to: '/events', label: 'Past events' }, { to: '/videos', label: 'Watch & listen' }, { to: '/contact', label: 'Contact' }];
+const nav = [{ to: '/', label: 'Home' }, { to: '/about', label: 'About us' }, { to: '/music', label: 'Our music' }, { to: '/contact', label: 'Contact' }];
 const icons = { Instagram, YouTube: Youtube, Facebook };
 
 function SocialLinks() {
@@ -23,18 +23,20 @@ function SocialLinks() {
 function RouteEffects() {
   const location = useLocation();
   const previousPath = useRef(location.pathname);
+  const previousHash = useRef('');
   useEffect(() => {
     const pathname = location.pathname.replace(/\/$/, '') || '/';
     const label = nav.find(n => n.to === pathname && n.to !== '/')?.label || (pathname === '/thank-you' ? 'Thank you' : pathname === '/privacy' ? 'Privacy' : undefined);
     document.title = `${label || 'Music Made to be Shared'} | The Fermata Initiative`;
-    if (previousPath.current !== location.pathname) {
+    if (previousPath.current !== location.pathname || previousHash.current !== location.hash || location.hash) {
       const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
       if (target) target.scrollIntoView({ behavior: 'instant' });
       else window.scrollTo({ top: 0, behavior: 'instant' });
       document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
       previousPath.current = location.pathname;
+      previousHash.current = location.hash;
     }
-  }, [location.pathname, location.hash]);
+  }, [location.pathname, location.hash, location.key]);
   return null;
 }
 
@@ -89,8 +91,8 @@ function Home() {
       </div>
     </section>
     <section className="home-story section"><div className="container story-section"><div className="story-heading"><Eyebrow>Why we do this</Eyebrow><h2>Music is better<br />with <span className="green-text">company.</span></h2><Link className="text-link" to="/about">Our story <ArrowRight size={18} /></Link></div><div className="story-copy"><p>The Fermata Initiative is a nonprofit run by volunteer musicians here in Newfoundland. We visit retirement communities and nursing homes and play live for the people who live there.</p><p>We play classical, jazz, pop and Newfoundland music, so there’s usually something for everyone. Everyone who plays with us volunteers their time. Live music isn’t like a recording. The people listening are part of the concert, and they’re as much a part of it as we are.</p></div></div></section>
-    <section className="moments-section section"><div className="container"><div className="section-heading"><div><h2>The audience is<br />part of the show.</h2></div><Link to="/events" className="text-link">Explore past events <ArrowRight size={18} /></Link></div><div className="home-event-grid"><Link to="/events#heritage-square" className="featured-event"><div className="event-photo"><img loading="lazy" src="/images/concert-wide.webp" alt="Piano and clarinet performance at Heritage Square" width="1500" height="1000" /><span className="image-tag">From our community</span><span className="round-arrow"><ArrowUpRight /></span></div><div className="featured-event-info"><div><span className="meta">Heritage Square, Conception Bay South</span><h3>An afternoon, brought to life.</h3></div><span className="event-type">Community concert</span></div></Link><div className="moment-note"><FermataMark /><p>A fermata is the symbol in sheet music that tells a player to hold a note longer than written. That’s where our name comes from.</p><p>We like the idea of slowing down for a few minutes and spending them with other people.</p><Link to="/about" className="text-link">Get to know us <ArrowRight size={18} /></Link></div></div></div></section>
-    <section className="home-videos section"><div className="container"><div className="section-heading"><div><Eyebrow>Classical, jazz, pop and Newfoundland music, played live.</Eyebrow><h2>A little taste of our music</h2></div><Link to="/videos" className="text-link">Watch & listen <ArrowRight size={18} /></Link></div><VideoCollection compact /></div></section>
+    <section className="moments-section section"><div className="container"><div className="section-heading"><div><h2>The audience is<br />part of the show.</h2></div><Link to="/music" className="text-link">Explore our music <ArrowRight size={18} /></Link></div><div className="home-event-grid"><Link to="/music#heritage-square" className="featured-event"><div className="event-photo"><img loading="lazy" src="/images/concert-wide.webp" alt="Piano and clarinet performance at Heritage Square" width="1500" height="1000" /><span className="image-tag">From our community</span><span className="round-arrow"><ArrowUpRight /></span></div><div className="featured-event-info"><div><span className="meta">Heritage Square, Conception Bay South</span><h3>An afternoon, brought to life.</h3></div><span className="event-type">Community concert</span></div></Link><div className="moment-note"><FermataMark /><p>A fermata is the symbol in sheet music that tells a player to hold a note longer than written. That’s where our name comes from.</p><p>We like the idea of slowing down for a few minutes and spending them with other people.</p><Link to="/about" className="text-link">Get to know us <ArrowRight size={18} /></Link></div></div></div></section>
+    <section className="home-videos section"><div className="container"><div className="section-heading"><div><Eyebrow>Classical, jazz, pop and Newfoundland music, played live.</Eyebrow><h2>A little taste of our music</h2></div><Link to="/music#watch-listen" className="text-link">Watch & listen <ArrowRight size={18} /></Link></div><VideoCollection compact /></div></section>
     <InvolveBanner />
   </>;
 }
@@ -125,15 +127,87 @@ function About() {
   </>;
 }
 
-function Gallery({ event }: { event: typeof events[number] }) {
-  const [index, setIndex] = useState(0);
-  return <Dialog.Root><Dialog.Trigger className="text-link">View concert photos <ArrowUpRight size={18} /></Dialog.Trigger><Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="gallery-dialog" onKeyDown={e => { if(e.key === 'ArrowRight') setIndex(i => (i + 1) % event.gallery.length); if(e.key === 'ArrowLeft') setIndex(i => (i + event.gallery.length - 1) % event.gallery.length); }}>
-    <Dialog.Title>{event.name}</Dialog.Title><Dialog.Description>{event.venue}, {event.location} · A few moments from our visit.</Dialog.Description><Dialog.Close className="dialog-close icon-button" aria-label="Close gallery"><X /></Dialog.Close><div className="gallery-image"><img src={event.gallery[index]} alt={`${event.venue} concert, photograph ${index + 1} of ${event.gallery.length}`} /></div><div className="gallery-controls"><button className="icon-button" aria-label="Previous photo" onClick={() => setIndex(i => (i + event.gallery.length - 1) % event.gallery.length)}><ChevronLeft /></button><span aria-live="polite">{index + 1} / {event.gallery.length}</span><button className="icon-button" aria-label="Next photo" onClick={() => setIndex(i => (i + 1) % event.gallery.length)}><ChevronRight /></button></div>
-  </Dialog.Content></Dialog.Portal></Dialog.Root>;
+function mediaSummary(media: ConcertMedia[]) {
+  const photos = media.filter(item => item.type === 'photo').length;
+  const clips = media.length - photos;
+  return [photos ? `${photos} photo${photos === 1 ? '' : 's'}` : '', clips ? `${clips} video${clips === 1 ? '' : 's'}` : ''].filter(Boolean).join(' · ');
 }
 
-function Events() {
-  return <><PageIntro eyebrow="From our community" title={<>We Come to<br /><span>You.</span></>}>A look back at the places we've visited and the music we've shared.</PageIntro><section className="container event-list" aria-label="Past concerts">{events.map(event => <article className="event-row" id={event.id} key={event.id}><div className={`event-row-photo ${!event.image ? 'event-placeholder' : ''}`}>{event.image ? <img src={event.image} alt="Musicians performing at Heritage Square" width="1500" height="1000" /> : <><FermataMark /><span>More moments to share.</span><small>Concert photos coming soon</small></>}</div><div className="event-row-info"><span className="meta">Community concert</span><h2>{event.name}</h2><p className="event-venue"><MapPin size={16} />{event.venue}, {event.location}</p><p>{event.description}</p>{event.gallery.length > 0 ? <Gallery event={event} /> : <span className="coming-soon">Photo album on the way</span>}</div></article>)}</section><section className="container host-note"><Music2 size={30} /><div><h3>Your community could be our next stop.</h3><p>Let's talk about bringing a volunteer concert to your residents.</p></div><Link className="button button-primary" to="/contact?interest=host">Host a concert <ArrowUpRight size={18} /></Link></section><InvolveBanner /></>;
+function ConcertVideo({ media }: { media: Extract<ConcertMedia, { type: 'video' }> }) {
+  const [playing, setPlaying] = useState(false);
+  return <div className="concert-video">
+    {playing ? <iframe src={`https://www.youtube-nocookie.com/embed/${media.youtubeId}?autoplay=1&controls=1&rel=0&playsinline=1`} title={media.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /> : <button type="button" onClick={() => setPlaying(true)} aria-label={`Play ${media.title}`}><img src={media.poster} alt="" /><span className="play-button"><Play size={26} fill="currentColor" /></span></button>}
+  </div>;
+}
+
+function ConcertCollection({ concert }: { concert: Concert }) {
+  const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(0);
+  const opener = useRef<HTMLButtonElement | null>(null);
+  const media = concert.media;
+  if (!media.length) return null;
+  const current = media[index];
+  const hasVideo = media.some(item => item.type === 'video');
+  const collectionLabel = hasVideo ? (media.some(item => item.type === 'photo') ? 'View photos & videos' : 'Watch concert videos') : 'View concert photos';
+  function show(itemIndex: number, trigger: HTMLButtonElement) {
+    opener.current = trigger;
+    setIndex(itemIndex);
+    setOpen(true);
+  }
+  function move(direction: number) { setIndex(i => (i + direction + media.length) % media.length); }
+  return <article className="concert-collection" id={concert.id} aria-labelledby={`${concert.id}-title`}>
+    <div className="collection-heading">
+      <div><h2 id={`${concert.id}-title`}>{concert.name}</h2><p className="collection-location"><MapPin size={17} aria-hidden="true" />{concert.location}</p></div>
+      <div className="collection-description"><p>{concert.description}</p><button type="button" className="text-link" aria-haspopup="dialog" onClick={e => show(0, e.currentTarget)} aria-label={`${collectionLabel} from ${concert.venue}`}>{collectionLabel}<ArrowUpRight size={18} /></button><span className="collection-count">{mediaSummary(media)}</span></div>
+    </div>
+    <div className={`collection-mosaic collection-mosaic-${Math.min(media.length, 3)}`}>
+      {media.slice(0, 3).map((item, itemIndex) => <button type="button" className="collection-preview" aria-haspopup="dialog" key={item.type === 'photo' ? item.src : item.youtubeId} onClick={e => show(itemIndex, e.currentTarget)} aria-label={`Open ${item.type === 'photo' ? item.alt : item.title} (${itemIndex + 1} of ${media.length})`}>
+        <img src={item.type === 'photo' ? item.src : item.poster} alt="" loading={itemIndex === 0 ? 'eager' : 'lazy'} style={{ objectPosition: item.position || 'center' }} />
+        {item.type === 'video' && <span className="play-button"><Play size={24} fill="currentColor" /></span>}
+        {itemIndex === 2 && media.length > 3 ? <span className="collection-more">+{media.length - 3} more</span> : <span className="collection-open" aria-hidden="true"><ArrowUpRight size={20} /></span>}
+      </button>)}
+    </div>
+    <Dialog.Root open={open} onOpenChange={setOpen}><Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="gallery-dialog music-gallery" onCloseAutoFocus={e => { e.preventDefault(); opener.current?.focus({ preventScroll: true }); }} onKeyDown={e => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); move(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); move(-1); }
+    }}>
+      <Dialog.Title>{concert.name}</Dialog.Title><Dialog.Description>{concert.venue}, {concert.location}</Dialog.Description>
+      <Dialog.Close className="dialog-close icon-button" aria-label="Close gallery"><X /></Dialog.Close>
+      <div className="gallery-image">{current.type === 'photo' ? <img src={current.src} alt={current.alt} /> : <ConcertVideo key={current.youtubeId} media={current} />}</div>
+      <div className="gallery-controls">
+        {media.length > 1 && <button type="button" className="icon-button" aria-label="Previous item" onClick={() => move(-1)}><ChevronLeft /></button>}
+        <span aria-live="polite">{index + 1} / {media.length}</span>
+        {media.length > 1 && <button type="button" className="icon-button" aria-label="Next item" onClick={() => move(1)}><ChevronRight /></button>}
+      </div>
+    </Dialog.Content></Dialog.Portal></Dialog.Root>
+  </article>;
+}
+
+function OurMusic() {
+  const collections = events.filter(concert => concert.media.length > 0);
+  return <>
+    <PageIntro eyebrow="Our music" title={<>We Come to<br /><span>You.</span></>}>A look back at the places we've visited and the music we've shared.</PageIntro>
+    {collections.length > 0 && <section className="container music-collections" aria-label="Photos and recordings from selected visits">{collections.map(concert => <ConcertCollection key={concert.id} concert={concert} />)}</section>}
+    <section className="music-listening section" id="watch-listen"><div className="container">
+      <div className="section-heading"><div><Eyebrow>Watch & listen</Eyebrow><h2>A little taste of our music</h2><p>Classical, jazz, pop and Newfoundland music, played live.</p></div></div>
+      <VideoCollection />
+    </div></section>
+    <section className="container music-places section" aria-labelledby="music-places-title">
+      <div className="music-places-intro"><Eyebrow>From our community</Eyebrow><h2 id="music-places-title">Where we’ve played</h2><p>Live music for retirement communities and nursing homes in Newfoundland.</p></div>
+      <ul className="venue-list">{events.map(concert => <li key={concert.id} id={concert.media.length ? undefined : concert.id}>
+        <span className="venue-symbol" aria-hidden="true"><MapPin size={23} strokeWidth={1.5} /></span>
+        <div><h3>{concert.venue}</h3><p>{concert.location}</p></div>
+        {concert.media.length > 0 && <Link className="text-link" to={`/music#${concert.id}`} aria-label={`See moments from ${concert.venue}`}>See moments<ArrowUpRight size={18} /></Link>}
+      </li>)}</ul>
+    </section>
+    <section className="container host-note"><Music2 size={30} /><div><h3>Your community could be our next stop.</h3><p>Let's talk about bringing a volunteer concert to your residents.</p></div><Link className="button button-primary" to="/contact?interest=host">Host a concert <ArrowUpRight size={18} /></Link></section>
+    <InvolveBanner />
+  </>;
+}
+
+function MusicRedirect({ listening = false }: { listening?: boolean }) {
+  const location = useLocation();
+  return <Navigate replace to={`/music${location.search}${location.hash || (listening ? '#watch-listen' : '')}`} />;
 }
 
 function VideoCollection({ compact = false }: { compact?: boolean }) {
@@ -144,10 +218,6 @@ function VideoCollection({ compact = false }: { compact?: boolean }) {
     e.preventDefault(); setPlaying(id);
   }
   return <><div className={`video-grid ${compact ? 'compact' : ''}`}>{items.map(video => <article className="video-card" key={video.id}><div className="video-frame">{playing === video.id ? <><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&controls=1&rel=0&playsinline=1&iv_load_policy=3`} title={video.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /><button className="video-stop" onClick={() => setPlaying(null)} aria-label={`Close ${video.title}`}><X size={18} /></button></> : <a href={`https://www.youtube.com/watch?v=${video.id}`} onClick={e => play(e, video.id)} target="_blank" rel="noopener noreferrer" aria-label={`Play ${video.title}`}><img loading="lazy" src={video.image} alt="" width="800" height="450" /><span className="video-shade" /><span className="video-label">Sample performance</span><span className="play-button"><Play size={22} fill="currentColor" /></span><span className="video-watch">Watch performance <ArrowUpRight size={17} /></span></a>}</div><span className="meta">{video.category}</span><h3>{video.title}</h3></article>)}</div><p className="sample-note">A preview of our video collection. These sample performances will be replaced with Fermata concert recordings.</p></>;
-}
-
-function Videos() {
-  return <><PageIntro eyebrow="Watch & listen" title={<>Make a little<br /><span>time for music.</span></>}>Settle in for a song. Our concert recordings will bring a little of the room to wherever you are.</PageIntro><section className="container videos-section"><VideoCollection /><div className="video-info"><Music2 size={22} /><p>Videos play right here when you press play. Prefer YouTube? Ctrl-click or open a video link in a new tab.</p></div></section><InvolveBanner /></>;
 }
 
 function Contact() {
@@ -192,7 +262,7 @@ function ThankYou() {
     <Eyebrow>Message sent</Eyebrow>
     <h1>Thanks for<br /><span>saying hello.</span></h1>
     <p>Your message is on its way to our team. We're looking forward to connecting with you.</p>
-    <div className="thank-you-actions"><Link className="button button-primary" to="/">Back to home <ArrowRight size={18} /></Link><Link className="text-link" to="/videos">Enjoy a little music <Play size={17} /></Link></div>
+    <div className="thank-you-actions"><Link className="button button-primary" to="/">Back to home <ArrowRight size={18} /></Link><Link className="text-link" to="/music#watch-listen">Enjoy a little music <Play size={17} /></Link></div>
     <FermataMark />
   </div></section>;
 }
@@ -202,7 +272,7 @@ function Privacy() {
 }
 
 function App() {
-  return <BrowserRouter><RouteEffects /><Header /><main id="main" tabIndex={-1}><Routes><Route path="/" element={<Home />} /><Route path="/about" element={<About />} /><Route path="/events" element={<Events />} /><Route path="/videos" element={<Videos />} /><Route path="/contact" element={<Contact />} /><Route path="/privacy" element={<Privacy />} /><Route path="/thank-you" element={<ThankYou />} /><Route path="*" element={<section className="container section"><h1>Let's get you back<br />to the music.</h1><Link className="button button-primary" to="/">Back home <ArrowRight size={18} /></Link></section>} /></Routes></main><Footer /><a href="#main" className="back-top" aria-label="Back to top" onClick={e => {e.preventDefault(); window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); document.getElementById('main')?.focus({ preventScroll: true });}}><ArrowDown size={18} /></a></BrowserRouter>;
+  return <BrowserRouter><RouteEffects /><Header /><main id="main" tabIndex={-1}><Routes><Route path="/" element={<Home />} /><Route path="/about" element={<About />} /><Route path="/music" element={<OurMusic />} /><Route path="/events" element={<MusicRedirect />} /><Route path="/videos" element={<MusicRedirect listening />} /><Route path="/contact" element={<Contact />} /><Route path="/privacy" element={<Privacy />} /><Route path="/thank-you" element={<ThankYou />} /><Route path="*" element={<section className="container section"><h1>Let's get you back<br />to the music.</h1><Link className="button button-primary" to="/">Back home <ArrowRight size={18} /></Link></section>} /></Routes></main><Footer /><a href="#main" className="back-top" aria-label="Back to top" onClick={e => {e.preventDefault(); window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); document.getElementById('main')?.focus({ preventScroll: true });}}><ArrowDown size={18} /></a></BrowserRouter>;
 }
 
 // Keep links shared before clean page URLs were introduced working.
