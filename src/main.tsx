@@ -97,8 +97,8 @@ function Home() {
   </>;
 }
 
-function PageIntro({ eyebrow, title, children }: { eyebrow?: string; title: React.ReactNode; children: React.ReactNode }) {
-  return <section className="page-intro container">{eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}<h1>{title}</h1><p>{children}</p><FermataMark /></section>;
+function PageIntro({ eyebrow, title, children, className = '' }: { eyebrow?: string; title: React.ReactNode; children: React.ReactNode; className?: string }) {
+  return <section className={`page-intro container ${className}`}>{eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}<h1>{title}</h1><p>{children}</p><FermataMark /></section>;
 }
 
 function About() {
@@ -179,7 +179,7 @@ function MusicGallery({ concerts }: { concerts: Concert[] }) {
 
 function OurMusic() {
   return <>
-    <PageIntro eyebrow="Our music" title={<>We Come to<br /><span>You.</span></>}>A look back at the places we've visited and the music we've shared.</PageIntro>
+    <PageIntro className="music-intro" eyebrow="Our music" title={<>We Come to <span>You.</span></>}>A look back at the places we've visited and the music we've shared.</PageIntro>
     <MusicGallery concerts={events} />
     <section className="music-listening section" id="watch-listen"><div className="container">
       <div className="section-heading"><div><Eyebrow>Watch & listen</Eyebrow><h2>A little taste of our music</h2><p>Classical, jazz, pop and Newfoundland music, played live.</p></div></div>
@@ -190,7 +190,6 @@ function OurMusic() {
       <ul className="venue-list">{events.map(concert => <li key={concert.id} id={concert.media.length ? undefined : concert.id}>
         <span className="venue-symbol" aria-hidden="true"><MapPin size={23} strokeWidth={1.5} /></span>
         <div><h3>{concert.venue}</h3><p>{concert.location}</p></div>
-        {concert.media.length > 0 && <Link className="text-link" to={`/music#${concert.id}`} aria-label={`See moments from ${concert.venue}`}>See moments<ArrowUpRight size={18} /></Link>}
       </li>)}</ul>
     </section>
     <section className="container host-note"><Music2 size={30} /><div><h3>Your community could be our next stop.</h3><p>Let's talk about bringing a volunteer concert to your residents.</p></div><Link className="button button-primary" to="/contact?interest=host">Host a concert <ArrowUpRight size={18} /></Link></section>

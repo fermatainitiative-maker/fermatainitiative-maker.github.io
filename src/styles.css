@@ -121,7 +121,6 @@
 .venue-symbol { width:48px; height:48px; background:var(--pale); border-radius:50%; color:var(--green); display:grid; place-items:center; flex-shrink:0; }
 .venue-list h3 { font-size:25px; }
 .venue-list p { margin-top:5px; font-size:16px; }
-.venue-list .text-link { margin-left:auto; align-self:center; flex-shrink:0; font-size:14px; gap:8px; }
 .music-gallery { max-height:94svh; }
 .music-gallery .gallery-image { height:min(62svh,640px); }
 .concert-video { height:100%; width:100%; display:flex; align-items:center; justify-content:center; background:var(--ink); }
@@ -132,7 +131,6 @@
 @media (max-width:1000px) {
   .music-places { gap:40px; grid-template-columns:.85fr 1.15fr; }
   .venue-list li { flex-wrap:wrap; gap:15px; }
-  .venue-list .text-link { margin-left:63px; }
 }
 @media (max-width:650px) {
   .music-moments { padding-bottom:48px; }
@@ -147,12 +145,13 @@
   .music-places-intro>p { font-size:17px; margin-top:18px; }
   .venue-list li { padding-block:23px; }
   .venue-list h3 { font-size:24px; }
-  .venue-list .text-link { margin-left:auto; }
   .music-gallery .gallery-image { height:55svh; }
-}
-@media (max-width:420px) {
-  .venue-list .text-link { margin-left:63px; }
 }
 @media (prefers-reduced-motion:reduce) {
   .moment-photo:hover>img { transform:none; }
+}
+
+.music-intro h1 { white-space:nowrap; }
+@media (max-width:650px) {
+  .music-intro h1 { font-size:clamp(36px,10vw,56px); }
 }
