@@ -113,7 +113,7 @@ function About() {
       </div>
     </section>
     <section className="section container">
-      <div className="section-heading"><div><Eyebrow>What we care about</Eyebrow><h2>People first.<br />Music in the room.</h2></div></div>
+      <div className="section-heading"><div><Eyebrow>What we care about</Eyebrow><h2>Sharing the joy of live music with everyone.</h2></div></div>
       <div className="principles">
         <article><span className="principle-icon"><UsersRound /></span><h3>Time together</h3><p>A relaxed space where residents, families, and musicians can talk and enjoy the music together.</p></article>
         <article><span className="principle-icon"><Heart /></span><h3>Community</h3><p>Local people giving their time to play for their neighbours.</p></article>
