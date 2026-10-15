@@ -63,7 +63,7 @@ function Header() {
 
 function Footer() {
   return <footer className="footer"><div className="container footer-top">
-    <div className="footer-brand"><Link to="/" aria-label="Home"><img src="/images/logo.png" width="165" height="132" alt="The Fermata Initiative" /></Link><p>Good music.<br />Even better company.</p></div>
+    <div className="footer-brand"><Link to="/" aria-label="Home"><img src="/images/logo.png" width="165" height="132" alt="The Fermata Initiative" /></Link><p>The audience is part of the show.</p></div>
     <div><span className="footer-label">Take a look around</span><div className="footer-nav">{nav.map(n => <Link key={n.to} to={n.to}>{n.label}</Link>)}</div></div>
     <div className="footer-social"><span className="footer-label">Keep in tune</span><p>Little moments, shared.</p><SocialLinks /><small>Our social profiles are coming soon.</small></div>
   </div><div className="container footer-bottom"><span>© {new Date().getFullYear()} The Fermata Initiative</span><span>Made for connection, here in Newfoundland.</span><Link to="/privacy">Privacy</Link></div></footer>;
@@ -76,7 +76,7 @@ function FermataMark({ className = '' }: { className?: string }) {
 }
 
 function InvolveBanner() {
-  return <section className="involve-banner"><div className="container involve-inner"><div><Eyebrow light>There's a place for you here</Eyebrow><h2>Help us make the<br />next moment happen.</h2><p>Share your music. Welcome a concert. Be part of the connection.</p></div><div className="involve-actions"><Link className="button button-cream" to="/contact?interest=volunteer">Become a volunteer <ArrowUpRight size={18} /></Link><Link className="light-link" to="/contact?interest=host">Bring music to your community <ArrowRight size={18} /></Link></div><FermataMark /></div></section>;
+  return <section className="involve-banner"><div className="container involve-inner"><div><h2>Help us make the<br />next moment happen.</h2><p>Share your music. Welcome a concert. Be part of the connection.</p></div><div className="involve-actions"><Link className="button button-cream" to="/contact?interest=volunteer">Become a volunteer <ArrowUpRight size={18} /></Link><Link className="light-link" to="/contact?interest=host">Bring music to your community <ArrowRight size={18} /></Link></div><FermataMark /></div></section>;
 }
 
 function Home() {
@@ -90,7 +90,7 @@ function Home() {
     </section>
     <section className="home-story section"><div className="container story-section"><div className="story-heading"><Eyebrow>Why we do this</Eyebrow><h2>Music is better<br />with <span className="green-text">company.</span></h2><Link className="text-link" to="/about">Our story <ArrowRight size={18} /></Link></div><div className="story-copy"><p>The Fermata Initiative is a nonprofit run by volunteer musicians here in Newfoundland. We visit retirement communities and nursing homes and play live for the people who live there.</p><p>We play classical, jazz, pop and Newfoundland music, so there’s usually something for everyone. Everyone who plays with us volunteers their time. Live music isn’t like a recording. The people listening are part of the concert, and they’re as much a part of it as we are.</p></div></div></section>
     <section className="moments-section section"><div className="container"><div className="section-heading"><div><h2>The audience is<br />part of the show.</h2></div><Link to="/events" className="text-link">Explore past events <ArrowRight size={18} /></Link></div><div className="home-event-grid"><Link to="/events#heritage-square" className="featured-event"><div className="event-photo"><img loading="lazy" src="/images/concert-wide.webp" alt="Piano and clarinet performance at Heritage Square" width="1500" height="1000" /><span className="image-tag">From our community</span><span className="round-arrow"><ArrowUpRight /></span></div><div className="featured-event-info"><div><span className="meta">Heritage Square, St John’s</span><h3>An afternoon, brought to life.</h3></div><span className="event-type">Community concert</span></div></Link><div className="moment-note"><FermataMark /><p>A fermata is the symbol in sheet music that tells a player to hold a note longer than written. That’s where our name comes from.</p><p>We like the idea of slowing down for a few minutes and spending them with other people.</p><Link to="/about" className="text-link">Get to know us <ArrowRight size={18} /></Link></div></div></div></section>
-    <section className="home-videos section"><div className="container"><div className="section-heading"><div><Eyebrow>Classical, jazz, pop and Newfoundland music, played live.</Eyebrow><h2>A little of what music can do.</h2></div><Link to="/videos" className="text-link">Watch & listen <ArrowRight size={18} /></Link></div><VideoCollection compact /></div></section>
+    <section className="home-videos section"><div className="container"><div className="section-heading"><div><Eyebrow>Classical, jazz, pop and Newfoundland music, played live.</Eyebrow><h2>A little taste of our music</h2></div><Link to="/videos" className="text-link">Watch & listen <ArrowRight size={18} /></Link></div><VideoCollection compact /></div></section>
     <InvolveBanner />
   </>;
 }
@@ -115,9 +115,9 @@ function About() {
     <section className="section container">
       <div className="section-heading"><div><Eyebrow>What we care about</Eyebrow><h2>People first.<br />Music in the room.</h2></div></div>
       <div className="principles">
-        <article><span className="principle-icon"><Music2 /></span><h3>Music within reach</h3><p>We bring the concert to residents, in the places they already live.</p></article>
         <article><span className="principle-icon"><UsersRound /></span><h3>Time together</h3><p>A relaxed space where residents, families, and musicians can talk and enjoy the music together.</p></article>
         <article><span className="principle-icon"><Heart /></span><h3>Community</h3><p>Local people giving their time to play for their neighbours.</p></article>
+        <article><span className="principle-icon"><Music2 /></span><h3>Playing together</h3><p>As music students, we enjoy finding new opportunities to play together and share our music with an audience.</p></article>
       </div>
     </section>
     <section className="name-story"><div className="container"><FermataMark /><div><h2>Why “Fermata”</h2><p>A fermata is a symbol in sheet music that tells the player to hold a note or a pause longer than written. We liked the idea of slowing down and spending a few minutes together.</p></div></div></section>
