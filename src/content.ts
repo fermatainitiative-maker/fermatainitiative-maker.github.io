@@ -1,5 +1,5 @@
 // Update the site's photos, videos, event information and social links here.
-// Event months come from the supplied folders; confirm exact dates before adding them.
+// Concerts are presented by venue rather than date.
 export const site = {
   name: 'The Fermata Initiative',
   web3formsKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'f384099e-16d8-46c2-9572-84a102a29ada',
@@ -15,8 +15,7 @@ export const events = [
     id: 'westbury-estates',
     name: 'An afternoon at Westbury Estates',
     venue: 'Westbury Estates',
-    date: 'October 2026',
-    month: 'OCT',
+    location: 'Newfoundland',
     image: null,
     description: 'Another place to come together through live music. Photos and a full look back at this visit are coming soon.',
     gallery: [],
@@ -25,8 +24,7 @@ export const events = [
     id: 'heritage-square',
     name: 'Music at Heritage Square',
     venue: 'Heritage Square',
-    date: 'September 2026',
-    month: 'SEP',
+    location: 'St John’s',
     image: '/images/concert-wide.webp',
     description: 'Piano, clarinet, and a room brought together by music. A few moments from our visit to Heritage Square.',
     gallery: ['/images/concert-wide.webp', '/images/concert-portrait.webp', '/images/concert-moment.webp'],
