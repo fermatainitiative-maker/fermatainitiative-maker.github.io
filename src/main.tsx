@@ -127,12 +127,6 @@ function About() {
   </>;
 }
 
-function mediaSummary(media: ConcertMedia[]) {
-  const photos = media.filter(item => item.type === 'photo').length;
-  const clips = media.length - photos;
-  return [photos ? `${photos} photo${photos === 1 ? '' : 's'}` : '', clips ? `${clips} video${clips === 1 ? '' : 's'}` : ''].filter(Boolean).join(' · ');
-}
-
 function ConcertVideo({ media }: { media: Extract<ConcertMedia, { type: 'video' }> }) {
   const [playing, setPlaying] = useState(false);
   return <div className="concert-video">
@@ -140,54 +134,53 @@ function ConcertVideo({ media }: { media: Extract<ConcertMedia, { type: 'video' 
   </div>;
 }
 
-function ConcertCollection({ concert }: { concert: Concert }) {
+function MusicGallery({ concerts }: { concerts: Concert[] }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const media = concert.media;
-  if (!media.length) return null;
-  const current = media[index];
-  const hasVideo = media.some(item => item.type === 'video');
-  const collectionLabel = hasVideo ? (media.some(item => item.type === 'photo') ? 'View photos & videos' : 'Watch concert videos') : 'View concert photos';
+  const items = concerts.flatMap(concert => concert.media.map((media, mediaIndex) => ({ concert, media, mediaIndex }))).sort((a, b) => a.mediaIndex - b.mediaIndex);
+  if (!items.length) return null;
+  // Share the preview space across visits; extra footage stays in the viewer.
+  const highlights = items.map((item, itemIndex) => ({ ...item, itemIndex })).filter(item => item.mediaIndex < 2);
+  const current = items[index];
   function show(itemIndex: number, trigger: HTMLButtonElement) {
     opener.current = trigger;
     setIndex(itemIndex);
     setOpen(true);
   }
-  function move(direction: number) { setIndex(i => (i + direction + media.length) % media.length); }
-  return <article className="concert-collection" id={concert.id} aria-labelledby={`${concert.id}-title`}>
-    <div className="collection-heading">
-      <div><h2 id={`${concert.id}-title`}>{concert.name}</h2><p className="collection-location"><MapPin size={17} aria-hidden="true" />{concert.location}</p></div>
-      <div className="collection-description"><p>{concert.description}</p><button type="button" className="text-link" aria-haspopup="dialog" onClick={e => show(0, e.currentTarget)} aria-label={`${collectionLabel} from ${concert.venue}`}>{collectionLabel}<ArrowUpRight size={18} /></button><span className="collection-count">{mediaSummary(media)}</span></div>
+  function move(direction: number) { setIndex(i => (i + direction + items.length) % items.length); }
+  return <section className="container music-moments" aria-label="Photos and recordings from our visits">
+    <div className={`moments-gallery-grid moments-grid-${Math.min(highlights.length, 3)}`}>
+      {highlights.map(({ concert, media, mediaIndex, itemIndex }) => <figure className="moment-tile" id={mediaIndex === 0 ? concert.id : undefined} key={`${concert.id}-${mediaIndex}`}>
+        <button type="button" className="moment-photo" aria-haspopup="dialog" onClick={e => show(itemIndex, e.currentTarget)} aria-label={`Open ${media.type === 'photo' ? media.alt : media.title}`}>
+          <img src={media.type === 'photo' ? media.src : media.poster} alt="" loading={itemIndex === 0 ? 'eager' : 'lazy'} style={{ objectPosition: media.position || 'center' }} />
+          {media.type === 'video' && <span className="play-button"><Play size={24} fill="currentColor" /></span>}
+          <span className="moment-open" aria-hidden="true"><ArrowUpRight size={20} /></span>
+        </button>
+        <figcaption><MapPin size={16} aria-hidden="true" /><div><span>{concert.venue}</span><small>{concert.location}</small></div></figcaption>
+      </figure>)}
     </div>
-    <div className={`collection-mosaic collection-mosaic-${Math.min(media.length, 3)}`}>
-      {media.slice(0, 3).map((item, itemIndex) => <button type="button" className="collection-preview" aria-haspopup="dialog" key={item.type === 'photo' ? item.src : item.youtubeId} onClick={e => show(itemIndex, e.currentTarget)} aria-label={`Open ${item.type === 'photo' ? item.alt : item.title} (${itemIndex + 1} of ${media.length})`}>
-        <img src={item.type === 'photo' ? item.src : item.poster} alt="" loading={itemIndex === 0 ? 'eager' : 'lazy'} style={{ objectPosition: item.position || 'center' }} />
-        {item.type === 'video' && <span className="play-button"><Play size={24} fill="currentColor" /></span>}
-        {itemIndex === 2 && media.length > 3 ? <span className="collection-more">+{media.length - 3} more</span> : <span className="collection-open" aria-hidden="true"><ArrowUpRight size={20} /></span>}
-      </button>)}
-    </div>
+    <div className="moments-gallery-footer"><p>A few moments from our visits.</p><button type="button" className="text-link" aria-haspopup="dialog" onClick={e => show(0, e.currentTarget)}>Browse the gallery<ArrowUpRight size={18} /></button></div>
     <Dialog.Root open={open} onOpenChange={setOpen}><Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="gallery-dialog music-gallery" onCloseAutoFocus={e => { e.preventDefault(); opener.current?.focus({ preventScroll: true }); }} onKeyDown={e => {
       if (e.key === 'ArrowRight') { e.preventDefault(); move(1); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); move(-1); }
     }}>
-      <Dialog.Title>{concert.name}</Dialog.Title><Dialog.Description>{concert.venue}, {concert.location}</Dialog.Description>
+      <Dialog.Title>{current.concert.venue}</Dialog.Title><Dialog.Description>{current.concert.location}</Dialog.Description>
       <Dialog.Close className="dialog-close icon-button" aria-label="Close gallery"><X /></Dialog.Close>
-      <div className="gallery-image">{current.type === 'photo' ? <img src={current.src} alt={current.alt} /> : <ConcertVideo key={current.youtubeId} media={current} />}</div>
+      <div className="gallery-image">{current.media.type === 'photo' ? <img src={current.media.src} alt={current.media.alt} /> : <ConcertVideo key={current.media.youtubeId} media={current.media} />}</div>
       <div className="gallery-controls">
-        {media.length > 1 && <button type="button" className="icon-button" aria-label="Previous item" onClick={() => move(-1)}><ChevronLeft /></button>}
-        <span aria-live="polite">{index + 1} / {media.length}</span>
-        {media.length > 1 && <button type="button" className="icon-button" aria-label="Next item" onClick={() => move(1)}><ChevronRight /></button>}
+        {items.length > 1 && <button type="button" className="icon-button" aria-label="Previous item" onClick={() => move(-1)}><ChevronLeft /></button>}
+        <span aria-live="polite">{index + 1} / {items.length}</span>
+        {items.length > 1 && <button type="button" className="icon-button" aria-label="Next item" onClick={() => move(1)}><ChevronRight /></button>}
       </div>
     </Dialog.Content></Dialog.Portal></Dialog.Root>
-  </article>;
+  </section>;
 }
 
 function OurMusic() {
-  const collections = events.filter(concert => concert.media.length > 0);
   return <>
     <PageIntro eyebrow="Our music" title={<>We Come to<br /><span>You.</span></>}>A look back at the places we've visited and the music we've shared.</PageIntro>
-    {collections.length > 0 && <section className="container music-collections" aria-label="Photos and recordings from selected visits">{collections.map(concert => <ConcertCollection key={concert.id} concert={concert} />)}</section>}
+    <MusicGallery concerts={events} />
     <section className="music-listening section" id="watch-listen"><div className="container">
       <div className="section-heading"><div><Eyebrow>Watch & listen</Eyebrow><h2>A little taste of our music</h2><p>Classical, jazz, pop and Newfoundland music, played live.</p></div></div>
       <VideoCollection />

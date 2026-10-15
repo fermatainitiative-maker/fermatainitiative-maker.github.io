@@ -91,29 +91,26 @@
   .hero-actions { margin-top:24px; }
 }
 
-/* Our music: selected collections and a venue list independent of footage. */
-.music-collections { padding-bottom:80px; }
-.concert-collection { scroll-margin-top:35px; }
-.concert-collection + .concert-collection { margin-top:80px; padding-top:60px; border-top:1px solid var(--line); }
-.collection-heading { display:grid; grid-template-columns:1.1fr 1fr; gap:64px; align-items:start; margin-bottom:30px; }
-.collection-heading h2 { font-size:clamp(30px,3vw,42px); }
-.collection-location { display:flex; align-items:center; gap:8px; margin-top:13px; font-size:16px; }
-.collection-location svg { flex-shrink:0; color:var(--green); }
-.collection-description>p { font-size:17px; line-height:1.7; max-width:520px; }
-.collection-description .text-link { margin-top:17px; }
-.collection-count { display:inline-block; font-size:13px; color:var(--muted); margin-left:20px; }
-.collection-mosaic { display:grid; gap:16px; grid-template-columns:2fr 1fr; grid-template-rows:repeat(2,minmax(0,1fr)); height:clamp(360px,39vw,500px); }
-.collection-preview { position:relative; padding:0; border:0; background:var(--pale); border-radius:9px; min-width:0; min-height:0; overflow:hidden; }
-.collection-preview:first-child { grid-row:span 2; border-top-left-radius:100px; }
-.collection-preview>img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
-.collection-preview:hover>img { transform:scale(1.025); }
-.collection-preview:focus-visible { outline-offset:4px; }
-.collection-open { position:absolute; bottom:16px; right:16px; display:grid; place-items:center; width:40px; height:40px; border-radius:50%; color:var(--ink); background:var(--cream); box-shadow:0 2px 12px #1d2d3012; }
-.collection-more { position:absolute; bottom:16px; right:16px; padding:7px 16px; border-radius:5px; color:var(--ink); background:var(--cream); font-size:15px; }
-.collection-mosaic-1 { grid-template-columns:1fr; height:auto; aspect-ratio:2/1; }
-.collection-mosaic-2 { grid-template-columns:1.4fr 1fr; grid-template-rows:1fr; }
-.collection-mosaic-2 .collection-preview:first-child { grid-row:auto; }
-.collection-preview .play-button { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
+/* Our music: one shared selection, with quiet attribution to each venue. */
+.music-moments { padding-bottom:65px; }
+.moments-gallery-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:30px 24px; }
+.moments-grid-1 { grid-template-columns:1fr; max-width:760px; }
+.moments-grid-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.moment-tile { margin:0; min-width:0; scroll-margin-top:35px; }
+.moment-photo { position:relative; display:block; width:100%; aspect-ratio:4/3; padding:0; border:0; overflow:hidden; border-radius:9px; background:var(--pale); }
+.moment-tile:first-child .moment-photo { border-top-left-radius:75px; }
+.moment-photo>img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.moment-photo:hover>img { transform:scale(1.025); }
+.moment-photo:focus-visible { outline-offset:4px; }
+.moment-open { position:absolute; bottom:13px; right:13px; display:grid; place-items:center; width:36px; height:36px; border-radius:50%; color:var(--ink); background:var(--cream); }
+.moment-photo .play-button { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
+.moment-tile figcaption { display:flex; align-items:flex-start; gap:9px; padding-top:15px; color:var(--muted); line-height:1.5; }
+.moment-tile figcaption>svg { flex-shrink:0; color:var(--green); margin-top:3px; }
+.moment-tile figcaption span { font-size:16px; color:var(--ink); }
+.moment-tile figcaption small { display:block; font-size:13px; margin-top:2px; }
+.moments-gallery-footer { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-top:34px; padding-top:23px; border-top:1px solid var(--line); }
+.moments-gallery-footer>p { font-size:15px; }
+.moments-gallery-footer .text-link { align-self:center; }
 .music-listening { background:var(--pale); }
 .music-listening .section-heading p { font-size:18px; margin-top:20px; }
 .music-places { display:grid; grid-template-columns:1fr 1.2fr; gap:90px; padding-bottom:60px; }
@@ -133,29 +130,18 @@
 .concert-video>button>img { width:100%; height:100%; object-fit:contain; }
 .concert-video .play-button { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
 @media (max-width:1000px) {
-  .collection-heading { gap:32px; }
   .music-places { gap:40px; grid-template-columns:.85fr 1.15fr; }
   .venue-list li { flex-wrap:wrap; gap:15px; }
   .venue-list .text-link { margin-left:63px; }
 }
 @media (max-width:650px) {
-  .music-collections { padding-bottom:52px; }
-  .collection-heading { grid-template-columns:1fr; gap:18px; margin-bottom:24px; }
-  .collection-heading h2 { font-size:32px; }
-  .collection-location { margin-top:10px; font-size:15px; }
-  .collection-description>p { font-size:17px; }
-  .collection-description .text-link { font-size:15px; }
-  .collection-count { font-size:12px; margin-left:14px; }
-  .collection-mosaic { height:auto; grid-template-columns:1fr 1fr; grid-template-rows:auto; gap:10px; }
-  .collection-preview { aspect-ratio:4/3; }
-  .collection-preview:first-child { grid-column:1/-1; grid-row:auto; aspect-ratio:6/5; border-top-left-radius:65px; }
-  .collection-mosaic-1 { aspect-ratio:auto; grid-template-columns:1fr; }
-  .collection-mosaic-2 { grid-template-columns:1fr; }
-  .collection-mosaic-2 .collection-preview:first-child { aspect-ratio:6/5; }
-  .collection-mosaic-2 .collection-preview { aspect-ratio:4/3; }
-  .collection-open { width:32px; height:32px; bottom:10px; right:10px; }
-  .collection-more { bottom:10px; right:10px; padding:5px 10px; font-size:13px; }
-  .concert-collection + .concert-collection { margin-top:48px; padding-top:40px; }
+  .music-moments { padding-bottom:48px; }
+  .moments-gallery-grid { grid-template-columns:1fr; gap:28px; }
+  .moment-photo { aspect-ratio:3/2; }
+  .moment-tile:first-child .moment-photo { border-top-left-radius:60px; }
+  .moment-tile figcaption { padding-top:12px; }
+  .moments-gallery-footer { margin-top:28px; flex-wrap:wrap; gap:14px; }
+  .moments-gallery-footer .text-link { font-size:15px; }
   .music-listening .section-heading p { font-size:17px; margin-top:18px; }
   .music-places { grid-template-columns:1fr; gap:30px; padding-bottom:35px; }
   .music-places-intro>p { font-size:17px; margin-top:18px; }
@@ -168,5 +154,5 @@
   .venue-list .text-link { margin-left:63px; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .collection-preview:hover>img { transform:none; }
+  .moment-photo:hover>img { transform:none; }
 }
