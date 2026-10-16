@@ -1,0 +1,40 @@
+{
+  "siteName": "The Fermata Initiative",
+  "siteUrl": "https://fermatainitiative.org/",
+  "pages": {
+    "/": {
+      "title": "The Fermata Initiative | Volunteer Concerts in Newfoundland",
+      "description": "Local volunteer musicians providing free concerts for retirement communities and senior living centers in Newfoundland. Discover our music or get involved."
+    },
+    "/about": {
+      "title": "About Us | The Fermata Initiative",
+      "description": "Meet the Newfoundland volunteer musicians behind The Fermata Initiative and learn how we bring free live music to retirement communities and senior living centers."
+    },
+    "/music": {
+      "title": "Our Music | The Fermata Initiative",
+      "description": "Watch live performances and browse photos from our community concerts in Newfoundland, featuring classical, jazz, pop and Newfoundland traditional music."
+    },
+    "/contact": {
+      "title": "Volunteer or Host a Concert | The Fermata Initiative",
+      "description": "Volunteer your musical talents, arrange a free concert for your retirement community, or discuss a partnership with The Fermata Initiative in Newfoundland."
+    },
+    "/privacy": {
+      "title": "Privacy | The Fermata Initiative",
+      "description": "Learn how The Fermata Initiative handles contact form information, optional Google Analytics, and embedded YouTube videos, and manage your analytics settings."
+    },
+    "/thank-you": {
+      "title": "Thank You | The Fermata Initiative",
+      "description": "Your message has been sent to The Fermata Initiative. Explore our music while we get back to you about your enquiry.",
+      "noindex": true
+    }
+  },
+  "aliases": {
+    "/events": "/music",
+    "/videos": "/music"
+  },
+  "notFound": {
+    "title": "Page Not Found | The Fermata Initiative",
+    "description": "Find your way back to The Fermata Initiative to explore our music, meet our volunteer musicians, or get in touch.",
+    "noindex": true
+  }
+}

@@ -10,6 +10,7 @@ import { events, site, videos, type Concert, type ConcertMedia } from './content
 import './styles.css';
 import { analytics, openCookieSettings } from './analytics-client';
 import { CookieConsent } from './CookieConsent';
+import { updatePageMetadata } from './seo';
 
 const nav = [{ to: '/', label: 'Home' }, { to: '/about', label: 'About us' }, { to: '/music', label: 'Our music' }, { to: '/contact', label: 'Contact' }];
 const icons = { YouTube: Youtube };
@@ -27,8 +28,7 @@ function RouteEffects() {
   const previousHash = useRef('');
   useEffect(() => {
     const pathname = location.pathname.replace(/\/$/, '') || '/';
-    const label = nav.find(n => n.to === pathname && n.to !== '/')?.label || (pathname === '/thank-you' ? 'Thank you' : pathname === '/privacy' ? 'Privacy' : undefined);
-    document.title = `${label || 'Music Made to be Shared'} | The Fermata Initiative`;
+    updatePageMetadata(location.pathname);
     if (!['/events', '/videos'].includes(pathname)) analytics.page(window.location.href, document.title);
     if (previousPath.current !== location.pathname || previousHash.current !== location.hash || location.hash) {
       const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
