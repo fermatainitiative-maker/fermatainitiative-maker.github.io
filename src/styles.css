@@ -19,7 +19,7 @@
 @media (max-width:650px) {
   .hero-copy, .hero-visual { min-width:0; }
   .hero-actions { justify-content:flex-start; }
-  .hero-copy>p, .story-copy p, .moment-note p { text-wrap:pretty; }
+  .story-copy p, .moment-note p { text-wrap:pretty; }
   .home-story, .moments-section, .home-videos { padding-block:64px; }
   .home-story h2, .moments-section h2, .home-videos h2 {
     font-size:clamp(34px,10.3vw,44px);
@@ -101,7 +101,7 @@
     text-align:center;
   }
   .hero h1 { text-align:center; }
-  .hero-copy>p { margin-inline:auto; margin-top:36px; text-align:start; }
+  .hero-copy>p { margin-inline:auto; margin-top:36px; text-align:start; text-wrap:wrap; }
   .hero-actions { justify-content:center; margin-top:38px; gap:18px; }
 }
 
