@@ -224,7 +224,12 @@ function Contact() {
   const statusRef = useRef<HTMLDivElement>(null);
   const sending = useRef(false);
   const started = useRef(false);
-  function formStarted() { if (!started.current) { started.current = true; analytics.formStart(interest); } }
+  function formStarted(e: FormEvent<HTMLFormElement>) {
+    if (!started.current) {
+      started.current = true;
+      analytics.formStart(new FormData(e.currentTarget).get('interest'));
+    }
+  }
   useEffect(() => setInterest(initialInterest), [initialInterest]);
   useEffect(() => { if(state === 'error') statusRef.current?.focus(); }, [state]);
   async function submit(e: FormEvent<HTMLFormElement>) {
