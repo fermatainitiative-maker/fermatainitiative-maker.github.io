@@ -98,7 +98,7 @@
     text-align:center;
   }
   .hero h1 { text-align:center; }
-  .hero-copy>p { margin-inline:auto; margin-top:36px; }
+  .hero-copy>p { margin-inline:auto; margin-top:36px; text-align:start; }
   .hero-actions { justify-content:center; margin-top:38px; gap:18px; }
 }
 
