@@ -8,6 +8,8 @@ import '@fontsource/outfit/500.css';
 import '@fontsource/outfit/600.css';
 import { events, site, videos, type Concert, type ConcertMedia } from './content';
 import './styles.css';
+import { analytics, openCookieSettings } from './analytics-client';
+import { CookieConsent } from './CookieConsent';
 
 const nav = [{ to: '/', label: 'Home' }, { to: '/about', label: 'About us' }, { to: '/music', label: 'Our music' }, { to: '/contact', label: 'Contact' }];
 const icons = { YouTube: Youtube };
@@ -27,6 +29,7 @@ function RouteEffects() {
     const pathname = location.pathname.replace(/\/$/, '') || '/';
     const label = nav.find(n => n.to === pathname && n.to !== '/')?.label || (pathname === '/thank-you' ? 'Thank you' : pathname === '/privacy' ? 'Privacy' : undefined);
     document.title = `${label || 'Music Made to be Shared'} | The Fermata Initiative`;
+    if (!['/events', '/videos'].includes(pathname)) analytics.page(window.location.href, document.title);
     if (previousPath.current !== location.pathname || previousHash.current !== location.hash || location.hash) {
       const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
       if (target) target.scrollIntoView({ behavior: 'instant' });
@@ -35,7 +38,7 @@ function RouteEffects() {
       previousPath.current = location.pathname;
       previousHash.current = location.hash;
     }
-  }, [location.pathname, location.hash, location.key]);
+  }, [location.pathname, location.search, location.hash, location.key]);
   return null;
 }
 
@@ -67,7 +70,7 @@ function Footer() {
     <div className="footer-brand"><Link to="/" aria-label="Home"><img src="/images/logo.png" width="165" height="132" alt="The Fermata Initiative" /></Link><p>The audience is part of the show.</p></div>
     <div><span className="footer-label">Take a look around</span><div className="footer-nav">{nav.map(n => <Link key={n.to} to={n.to}>{n.label}</Link>)}</div></div>
     <div className="footer-social"><span className="footer-label">Keep in tune</span><p>Little moments, shared.</p><SocialLinks /></div>
-  </div><div className="container footer-bottom"><span>© {new Date().getFullYear()} The Fermata Initiative</span><span>Made for connection, here in Newfoundland.</span><Link to="/privacy">Privacy</Link></div></footer>;
+  </div><div className="container footer-bottom"><span>© {new Date().getFullYear()} The Fermata Initiative</span><span>Made for connection, here in Newfoundland.</span><span className="footer-privacy"><Link to="/privacy">Privacy</Link><button type="button" onClick={openCookieSettings}>Cookie settings</button></span></div></footer>;
 }
 
 function Eyebrow({ children, light = false }: { children: React.ReactNode; light?: boolean }) { return <div className={`eyebrow${light ? ' light' : ''}`}><span />{children}</div>; }
@@ -129,7 +132,7 @@ function About() {
 function ConcertVideo({ media }: { media: Extract<ConcertMedia, { type: 'video' }> }) {
   const [playing, setPlaying] = useState(false);
   return <div className="concert-video">
-    {playing ? <iframe src={`https://www.youtube-nocookie.com/embed/${media.youtubeId}?autoplay=1&controls=1&rel=0&playsinline=1`} title={media.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /> : <button type="button" onClick={() => setPlaying(true)} aria-label={`Play ${media.title}`}><img src={media.poster} alt="" /><span className="play-button"><Play size={26} fill="currentColor" /></span></button>}
+    {playing ? <iframe src={`https://www.youtube-nocookie.com/embed/${media.youtubeId}?autoplay=1&controls=1&rel=0&playsinline=1&enablejsapi=1`} title={media.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /> : <button type="button" onClick={() => { analytics.video(media.youtubeId); setPlaying(true); }} aria-label={`Play ${media.title}`}><img src={media.poster} alt="" /><span className="play-button"><Play size={26} fill="currentColor" /></span></button>}
   </div>;
 }
 
@@ -206,9 +209,9 @@ function VideoCollection({ compact = false }: { compact?: boolean }) {
   const items = compact ? videos.filter(video => video.featured) : videos;
   function play(e: MouseEvent<HTMLAnchorElement>, id: string) {
     if(e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-    e.preventDefault(); setPlaying(id);
+    e.preventDefault(); analytics.video(id); setPlaying(id);
   }
-  return <><div className={`video-grid ${compact ? 'compact' : ''}`}>{items.map(video => <article className="video-card" key={video.id}><div className="video-frame">{playing === video.id ? <><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&controls=1&rel=0&playsinline=1&iv_load_policy=3`} title={video.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /><button className="video-stop" onClick={() => setPlaying(null)} aria-label={`Close ${video.title}`}><X size={18} /></button></> : <a href={`https://www.youtube.com/watch?v=${video.id}`} onClick={e => play(e, video.id)} target="_blank" rel="noopener noreferrer" aria-label={`Play ${video.title}`}><img loading="lazy" src={video.image} alt="" width="800" height="450" /><span className="video-shade" /><span className="video-label">Live performance</span><span className="play-button"><Play size={22} fill="currentColor" /></span><span className="video-watch">Watch performance <ArrowUpRight size={17} /></span></a>}</div><span className="meta">{video.category}</span><h3>{video.title}</h3></article>)}</div></>;
+  return <><div className={`video-grid ${compact ? 'compact' : ''}`}>{items.map(video => <article className="video-card" key={video.id}><div className="video-frame">{playing === video.id ? <><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&controls=1&rel=0&playsinline=1&enablejsapi=1&iv_load_policy=3`} title={video.title} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /><button className="video-stop" onClick={() => setPlaying(null)} aria-label={`Close ${video.title}`}><X size={18} /></button></> : <a href={`https://www.youtube.com/watch?v=${video.id}`} onClick={e => play(e, video.id)} target="_blank" rel="noopener noreferrer" aria-label={`Play ${video.title}`}><img loading="lazy" src={video.image} alt="" width="800" height="450" /><span className="video-shade" /><span className="video-label">Live performance</span><span className="play-button"><Play size={22} fill="currentColor" /></span><span className="video-watch">Watch performance <ArrowUpRight size={17} /></span></a>}</div><span className="meta">{video.category}</span><h3>{video.title}</h3></article>)}</div></>;
 }
 
 function Contact() {
@@ -219,14 +222,20 @@ function Contact() {
   const [state, setState] = useState<'idle' | 'sending' | 'error'>('idle');
   const [error, setError] = useState('');
   const statusRef = useRef<HTMLDivElement>(null);
+  const sending = useRef(false);
+  const started = useRef(false);
+  function formStarted() { if (!started.current) { started.current = true; analytics.formStart(interest); } }
   useEffect(() => setInterest(initialInterest), [initialInterest]);
   useEffect(() => { if(state === 'error') statusRef.current?.focus(); }, [state]);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if(state === 'sending') return;
+    if(sending.current) return;
     const form = e.currentTarget;
     const data = new FormData(form);
     if(data.get('botcheck')) return;
+    sending.current = true;
+    const submission = {};
+    const submittedInterest = data.get('interest');
     data.set('access_key', site.web3formsKey);
     data.set('subject', `Fermata website enquiry: ${interest === 'host' ? 'Host a concert' : interest === 'volunteer' ? 'Volunteer' : 'General enquiry'}`);
     data.set('from_name', 'The Fermata Initiative website');
@@ -236,15 +245,16 @@ function Contact() {
     try {
       const response = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.fromEntries(data)), signal: controller.signal });
       const result = await response.json();
-      if(!response.ok || !result.success) throw new Error(response.status === 429 ? 'Please wait a little before trying again.' : 'Your message could not be sent. Please try again in a moment.');
+      if(!response.ok || result.success !== true) throw new Error(response.status === 429 ? 'Please wait a little before trying again.' : 'Your message could not be sent. Please try again in a moment.');
+      analytics.lead({ ok: response.ok, success: result.success }, submittedInterest, submission);
       form.reset();
       navigate('/thank-you', { replace: true });
     } catch(err) {
       setState('error');
       setError(err instanceof Error && err.name === 'AbortError' ? 'The connection took too long. Please check your connection and try again.' : err instanceof TypeError ? 'We could not connect. Please check your internet connection and try again.' : err instanceof Error ? err.message : 'Something went wrong. Please try again.');
-    } finally { window.clearTimeout(timeout); }
+    } finally { window.clearTimeout(timeout); sending.current = false; }
   }
-  return <><PageIntro eyebrow="Let's make a connection" title={<>It starts with<br /><span>a hello.</span></>}>Want to share your music, host a concert, or just learn a little more? We'd love to hear from you.</PageIntro><section className="container contact-layout"><aside><div className="contact-option"><span className="principle-icon"><Music2 /></span><h3>Share your music</h3><p>Musicians, singers, and helping hands: tell us a little about yourself and how you'd like to get involved.</p><button className="text-link" onClick={() => { setInterest('volunteer'); document.getElementById('name')?.focus(); }}>I'd like to volunteer <ArrowRight size={18} /></button></div><div className="contact-option"><span className="principle-icon"><UsersRound /></span><h3>Welcome a concert</h3><p>Part of a retirement community? Let's explore a visit that works for your residents and your space.</p><button className="text-link" onClick={() => { setInterest('host'); document.getElementById('name')?.focus(); }}>I'd like to host <ArrowRight size={18} /></button></div><div className="location-note"><MapPin size={18} /><span>Based in Newfoundland, Canada</span></div></aside><div className="form-card"><form onSubmit={submit}><h2>Drop us a note.</h2><p className="form-intro">All fields are required, except your organisation.</p><div className="form-grid"><label htmlFor="name">Your name<input id="name" name="name" autoComplete="name" placeholder="First and last name" required maxLength={120} /></label><label htmlFor="email">Email address<input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required maxLength={254} /></label></div><label htmlFor="interest">I'm getting in touch about<select name="interest" id="interest" value={interest} onChange={e => setInterest(e.target.value)}><option value="general">A general hello</option><option value="volunteer">Volunteering / performing</option><option value="host">Hosting a concert</option><option value="partnership">A community partnership</option></select></label><label htmlFor="organisation">Organisation <span className="optional">(optional)</span><input id="organisation" name="organisation" autoComplete="organization" placeholder="Your community, group, or organisation" maxLength={180} /></label><label htmlFor="message">Your message<textarea id="message" name="message" rows={5} placeholder={interest === 'host' ? 'Tell us about your community, location, and any dates you have in mind…' : interest === 'volunteer' ? 'Tell us what you play or how you would like to help…' : 'A question, an idea, a little introduction…'} required maxLength={5000} /></label><input type="checkbox" name="botcheck" className="botcheck" tabIndex={-1} aria-hidden="true" />{state === 'error' && <div className="form-error" role="alert" tabIndex={-1} ref={statusRef}>{error} Your message is still here.</div>}<button type="submit" className="button button-primary submit-button" disabled={state === 'sending'}>{state === 'sending' ? <><LoaderCircle className="spin" size={18} />Sending…</> : <>Send your message <Send size={18} /></>}</button></form></div></section><section className="section container faq-section"><Eyebrow>A few helpful notes</Eyebrow><h2>Before you say hello.</h2><div className="faq-list"><details><summary>Who can volunteer?<CircleHelp size={20} /></summary><p>We'd love to hear from musicians, singers, and people who enjoy helping a concert come together. Use the form to tell us about your interests and availability.</p></details><details><summary>How do we arrange a visit?<CircleHelp size={20} /></summary><p>Choose “Hosting a concert” in the form and tell us about your retirement community, where you're located, and any dates you have in mind. We'll start a conversation about what might work.</p></details><details><summary>Do you only welcome one kind of music?<CircleHelp size={20} /></summary><p>We welcome conversations about different instruments and musical styles. Tell us what you love to perform, and we can explore how it could fit a community concert.</p></details></div></section></>;
+  return <><PageIntro eyebrow="Let's make a connection" title={<>It starts with<br /><span>a hello.</span></>}>Want to share your music, host a concert, or just learn a little more? We'd love to hear from you.</PageIntro><section className="container contact-layout"><aside><div className="contact-option"><span className="principle-icon"><Music2 /></span><h3>Share your music</h3><p>Musicians, singers, and helping hands: tell us a little about yourself and how you'd like to get involved.</p><button className="text-link" onClick={() => { setInterest('volunteer'); document.getElementById('name')?.focus(); }}>I'd like to volunteer <ArrowRight size={18} /></button></div><div className="contact-option"><span className="principle-icon"><UsersRound /></span><h3>Welcome a concert</h3><p>Part of a retirement community? Let's explore a visit that works for your residents and your space.</p><button className="text-link" onClick={() => { setInterest('host'); document.getElementById('name')?.focus(); }}>I'd like to host <ArrowRight size={18} /></button></div><div className="location-note"><MapPin size={18} /><span>Based in Newfoundland, Canada</span></div></aside><div className="form-card"><form id="contact-form" onSubmit={submit} onChange={formStarted}><h2>Drop us a note.</h2><p className="form-intro">All fields are required, except your organisation.</p><div className="form-grid"><label htmlFor="name">Your name<input id="name" name="name" autoComplete="name" placeholder="First and last name" required maxLength={120} /></label><label htmlFor="email">Email address<input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required maxLength={254} /></label></div><label htmlFor="interest">I'm getting in touch about<select name="interest" id="interest" value={interest} onChange={e => setInterest(e.target.value)}><option value="general">A general hello</option><option value="volunteer">Volunteering / performing</option><option value="host">Hosting a concert</option><option value="partnership">A community partnership</option></select></label><label htmlFor="organisation">Organisation <span className="optional">(optional)</span><input id="organisation" name="organisation" autoComplete="organization" placeholder="Your community, group, or organisation" maxLength={180} /></label><label htmlFor="message">Your message<textarea id="message" name="message" rows={5} placeholder={interest === 'host' ? 'Tell us about your community, location, and any dates you have in mind…' : interest === 'volunteer' ? 'Tell us what you play or how you would like to help…' : 'A question, an idea, a little introduction…'} required maxLength={5000} /></label><input type="checkbox" name="botcheck" className="botcheck" tabIndex={-1} aria-hidden="true" />{state === 'error' && <div className="form-error" role="alert" tabIndex={-1} ref={statusRef}>{error} Your message is still here.</div>}<button type="submit" className="button button-primary submit-button" disabled={state === 'sending'}>{state === 'sending' ? <><LoaderCircle className="spin" size={18} />Sending…</> : <>Send your message <Send size={18} /></>}</button></form></div></section><section className="section container faq-section"><Eyebrow>A few helpful notes</Eyebrow><h2>Before you say hello.</h2><div className="faq-list"><details><summary>Who can volunteer?<CircleHelp size={20} /></summary><p>We'd love to hear from musicians, singers, and people who enjoy helping a concert come together. Use the form to tell us about your interests and availability.</p></details><details><summary>How do we arrange a visit?<CircleHelp size={20} /></summary><p>Choose “Hosting a concert” in the form and tell us about your retirement community, where you're located, and any dates you have in mind. We'll start a conversation about what might work.</p></details><details><summary>Do you only welcome one kind of music?<CircleHelp size={20} /></summary><p>We welcome conversations about different instruments and musical styles. Tell us what you love to perform, and we can explore how it could fit a community concert.</p></details></div></section></>;
 }
 
 function ThankYou() {
@@ -259,11 +269,27 @@ function ThankYou() {
 }
 
 function Privacy() {
-  return <section className="container section privacy-page"><Eyebrow>Your information</Eyebrow><h1>A note on privacy.</h1><p>The contact form asks for your name, email address, and message, plus an optional organisation. We use these details to respond to your enquiry and coordinate the volunteering, concert, or partnership you ask about.</p><h2>Contact form delivery</h2><p>Messages are sent through Web3Forms, which processes the submitted information to deliver it by email. Please avoid including sensitive personal information. See the <a href="https://web3forms.com/privacy" target="_blank" rel="noopener noreferrer">Web3Forms privacy policy</a> for its practices.</p><h2>Videos and external links</h2><p>Video players connect to YouTube's privacy-enhanced embed domain only when you press play. YouTube may then collect information according to its policies. Social links open external websites. This website uses locally hosted fonts and images and does not include analytics.</p><h2>Questions about your details?</h2><p>Use the <Link to="/contact">contact form</Link> to ask about information you've shared or to request its removal from our correspondence.</p></section>;
+  return <section className="container section privacy-page"><Eyebrow>Your information</Eyebrow><h1>A note on privacy.</h1><p>The contact form asks for your name, email address, and message, plus an optional organisation. We use these details to respond to your enquiry and coordinate the volunteering, concert, or partnership you ask about.</p><h2>Contact form delivery</h2><p>Messages are sent through Web3Forms, which processes the submitted information to deliver it by email. Please avoid including sensitive personal information. See the <a href="https://web3forms.com/privacy" target="_blank" rel="noopener noreferrer">Web3Forms privacy policy</a> for its practices.</p><h2>Videos and external links</h2><p>Video players connect to YouTube's privacy-enhanced embed domain only when you press play. YouTube may then collect information according to its policies. Social links open external websites. This website uses locally hosted fonts and images.</p><h2>Optional website analytics</h2><p>If you accept analytics, Google Analytics helps us understand visits, page use, music engagement, and successful enquiries. It receives technical information such as browser and device details, approximate location, and a cookie identifier. For enquiries, we send only the category (such as volunteering or hosting), never your name, email address, organisation, or message text. Advertising personalisation is disabled.</p><p>Analytics stays off until you accept it. We remember your choice for six months; you can <button type="button" className="privacy-settings" onClick={openCookieSettings}>change your cookie settings</button> at any time. Declining stops future analytics collection and removes this site's Analytics cookies. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google’s privacy policy</a> for how Google processes data.</p><h2>Questions about your details?</h2><p>Use the <Link to="/contact">contact form</Link> to ask about information you've shared or to request its removal from our correspondence.</p></section>;
+}
+
+function ContactClickTracking() {
+  useEffect(() => {
+    function click(event: globalThis.MouseEvent) {
+      const anchor = event.target instanceof Element ? event.target.closest('a[href]') : null;
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+      const url = new URL(anchor.href);
+      if (url.origin !== window.location.origin || url.pathname.replace(/\/$/, '') !== '/contact') return;
+      const placement = anchor.closest('header') ? 'header' : anchor.closest('.hero') ? 'hero' : anchor.closest('footer') ? 'footer' : 'body';
+      analytics.contactClick(url.searchParams.get('interest'), placement);
+    }
+    document.addEventListener('click', click);
+    return () => document.removeEventListener('click', click);
+  }, []);
+  return null;
 }
 
 function App() {
-  return <BrowserRouter><RouteEffects /><Header /><main id="main" tabIndex={-1}><Routes><Route path="/" element={<Home />} /><Route path="/about" element={<About />} /><Route path="/music" element={<OurMusic />} /><Route path="/events" element={<MusicRedirect />} /><Route path="/videos" element={<MusicRedirect listening />} /><Route path="/contact" element={<Contact />} /><Route path="/privacy" element={<Privacy />} /><Route path="/thank-you" element={<ThankYou />} /><Route path="*" element={<section className="container section"><h1>Let's get you back<br />to the music.</h1><Link className="button button-primary" to="/">Back home <ArrowRight size={18} /></Link></section>} /></Routes></main><Footer /><a href="#main" className="back-top" aria-label="Back to top" onClick={e => {e.preventDefault(); window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); document.getElementById('main')?.focus({ preventScroll: true });}}><ArrowDown size={18} /></a></BrowserRouter>;
+  return <BrowserRouter><RouteEffects /><ContactClickTracking /><Header /><main id="main" tabIndex={-1}><Routes><Route path="/" element={<Home />} /><Route path="/about" element={<About />} /><Route path="/music" element={<OurMusic />} /><Route path="/events" element={<MusicRedirect />} /><Route path="/videos" element={<MusicRedirect listening />} /><Route path="/contact" element={<Contact />} /><Route path="/privacy" element={<Privacy />} /><Route path="/thank-you" element={<ThankYou />} /><Route path="*" element={<section className="container section"><h1>Let's get you back<br />to the music.</h1><Link className="button button-primary" to="/">Back home <ArrowRight size={18} /></Link></section>} /></Routes></main><Footer /><CookieConsent /><a href="#main" className="back-top" aria-label="Back to top" onClick={e => {e.preventDefault(); window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); document.getElementById('main')?.focus({ preventScroll: true });}}><ArrowDown size={18} /></a></BrowserRouter>;
 }
 
 // Keep links shared before clean page URLs were introduced working.
