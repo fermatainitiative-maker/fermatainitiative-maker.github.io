@@ -34,6 +34,9 @@
   .moment-note .eyebrow { max-width:none; padding-right:80px; }
   .moment-note>.fermata-mark { position:static; display:block; width:60px; margin:0 0 22px; }
   .header-cta { white-space:nowrap; }
+  .contact-option h3, .principles h3, .name-story h2 { text-align:center; }
+  .contact-option .principle-icon, .principles .principle-icon, .name-story .fermata-mark { margin-inline:auto; }
+  .name-story .fermata-mark { display:block; }
 }
 @media (max-width:370px) {
   .header-inner { gap:8px; }
