@@ -203,7 +203,7 @@ function MusicRedirect({ listening = false }: { listening?: boolean }) {
 
 function VideoCollection({ compact = false }: { compact?: boolean }) {
   const [playing, setPlaying] = useState<string | null>(null);
-  const items = compact ? videos.slice(0, 2) : videos;
+  const items = compact ? videos.filter(video => video.featured) : videos;
   function play(e: MouseEvent<HTMLAnchorElement>, id: string) {
     if(e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
     e.preventDefault(); setPlaying(id);

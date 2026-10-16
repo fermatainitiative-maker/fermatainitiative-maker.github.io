@@ -48,7 +48,7 @@ export const events: Concert[] = [
 
 // Recordings from the Fermata Initiative YouTube channel.
 export const videos = [
-  { id: '3oLMtCtvWl8', title: 'Fauré — Sicilienne', category: 'Clarinet & piano', image: '/images/video-faure.webp' },
-  { id: 'oyGuQrlzU4Y', title: 'Gerhard Wuensch — Clarinet Dances', category: 'Clarinet & piano', image: '/images/video-wuensch.webp' },
-  { id: 'yq_O0boWw-c', title: 'Chopin — Impromptu', category: 'Solo piano', image: '/images/video-chopin.webp' },
+  { id: '3oLMtCtvWl8', title: 'Fauré — Sicilienne', category: 'Clarinet & piano', image: '/images/heritage-duet.webp', featured: true },
+  { id: 'oyGuQrlzU4Y', title: 'Gerhard Wuensch — Clarinet Dances', category: 'Clarinet & piano', image: '/images/video-wuensch.webp', featured: false },
+  { id: 'yq_O0boWw-c', title: 'Chopin — Impromptu', category: 'Solo piano', image: '/images/video-chopin.webp', featured: true },
 ];
