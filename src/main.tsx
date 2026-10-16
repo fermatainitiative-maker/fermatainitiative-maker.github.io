@@ -49,7 +49,7 @@ function Header() {
   return <>
     <a href="#main" className="skip-link" onClick={e => { e.preventDefault(); document.getElementById('main')?.focus(); }}>Skip to content</a>
     <header className="site-header"><div className="container header-inner">
-      <Link className="brand" to="/" aria-label="The Fermata Initiative — home"><img src="/images/logo.png" alt="The Fermata Initiative" width="132" height="106" /></Link>
+      <Link className="brand" to="/" aria-label="The Fermata Initiative - home"><img src="/images/logo.png" alt="The Fermata Initiative" width="132" height="106" /></Link>
       <nav className="desktop-nav" aria-label="Main navigation">{nav.map(n => <NavLink key={n.to} to={n.to}>{n.label}</NavLink>)}</nav>
       <Link to="/contact?interest=volunteer" className="button button-primary header-cta">Get involved <ArrowUpRight size={18} /></Link>
       <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -88,7 +88,7 @@ function Home() {
     <section className="hero-section">
       <div className="hero-background" aria-hidden="true"><FermataMark /></div>
       <div className="hero container">
-      <div className="hero-copy"><h1>Music Made{' '}<span className="hero-title-bridge">to be</span>{' '}<span className="hero-title-shared">Shared.</span></h1><p>We bring live, volunteer-led concerts to retirement communities in Newfoundland — creating space to listen, smile, and connect.</p><div className="hero-actions"><Link to="/contact?interest=volunteer" className="button button-primary">Be part of the music <ArrowUpRight size={18} /></Link><Link to="/about" className="text-link">Meet Fermata <ArrowRight size={18} /></Link></div></div>
+      <div className="hero-copy"><h1>Music Made{' '}<span className="hero-title-bridge">to be</span>{' '}<span className="hero-title-shared">Shared.</span></h1><p>We bring live, volunteer-led concerts to retirement communities in Newfoundland - creating space to listen, smile, and connect.</p><div className="hero-actions"><Link to="/contact?interest=volunteer" className="button button-primary">Be part of the music <ArrowUpRight size={18} /></Link><Link to="/about" className="text-link">Meet Fermata <ArrowRight size={18} /></Link></div></div>
       <div className="hero-visual"><div className="hero-photo"><img src="/images/heritage-duet.webp" alt="A pianist and clarinettist sharing live music with retirement community residents" fetchPriority="high" width="1500" height="1000" /></div><div className="photo-caption"><span className="caption-symbol"><MapPin size={24} strokeWidth={1.5} aria-hidden="true" /></span><div><strong>Heritage Square</strong><span className="caption-location">Conception Bay South</span></div></div></div>
       </div>
     </section>
@@ -293,8 +293,23 @@ function ContactClickTracking() {
   return null;
 }
 
+function BackToTop() {
+  const [visible, setVisible] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const updateVisibility = () => setVisible(window.scrollY > 1);
+    updateVisibility();
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    return () => window.removeEventListener('scroll', updateVisibility);
+  }, [location.key]);
+
+  if (!visible) return null;
+  return <a href="#main" className="back-top" aria-label="Back to top" onClick={e => {e.preventDefault(); window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); document.getElementById('main')?.focus({ preventScroll: true });}}><ArrowDown size={18} /></a>;
+}
+
 function App() {
-  return <BrowserRouter><RouteEffects /><ContactClickTracking /><Header /><main id="main" tabIndex={-1}><Routes><Route path="/" element={<Home />} /><Route path="/about" element={<About />} /><Route path="/music" element={<OurMusic />} /><Route path="/events" element={<MusicRedirect />} /><Route path="/videos" element={<MusicRedirect listening />} /><Route path="/contact" element={<Contact />} /><Route path="/privacy" element={<Privacy />} /><Route path="/thank-you" element={<ThankYou />} /><Route path="*" element={<section className="container section"><h1>Let's get you back<br />to the music.</h1><Link className="button button-primary" to="/">Back home <ArrowRight size={18} /></Link></section>} /></Routes></main><Footer /><CookieConsent /><a href="#main" className="back-top" aria-label="Back to top" onClick={e => {e.preventDefault(); window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); document.getElementById('main')?.focus({ preventScroll: true });}}><ArrowDown size={18} /></a></BrowserRouter>;
+  return <BrowserRouter><RouteEffects /><ContactClickTracking /><Header /><main id="main" tabIndex={-1}><Routes><Route path="/" element={<Home />} /><Route path="/about" element={<About />} /><Route path="/music" element={<OurMusic />} /><Route path="/events" element={<MusicRedirect />} /><Route path="/videos" element={<MusicRedirect listening />} /><Route path="/contact" element={<Contact />} /><Route path="/privacy" element={<Privacy />} /><Route path="/thank-you" element={<ThankYou />} /><Route path="*" element={<section className="container section"><h1>Let's get you back<br />to the music.</h1><Link className="button button-primary" to="/">Back home <ArrowRight size={18} /></Link></section>} /></Routes></main><Footer /><CookieConsent /><BackToTop /></BrowserRouter>;
 }
 
 // Keep links shared before clean page URLs were introduced working.
