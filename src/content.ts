@@ -4,9 +4,7 @@ export const site = {
   name: 'The Fermata Initiative',
   web3formsKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'f384099e-16d8-46c2-9572-84a102a29ada',
   socials: [
-    { name: 'Instagram', url: 'https://www.instagram.com/', placeholder: true },
-    { name: 'YouTube', url: 'https://www.youtube.com/', placeholder: true },
-    { name: 'Facebook', url: 'https://www.facebook.com/', placeholder: true },
+    { name: 'YouTube', url: 'https://www.youtube.com/@Fermata-initiative' },
   ],
 };
 
@@ -48,10 +46,9 @@ export const events: Concert[] = [
   },
 ];
 
-// Temporary performance examples from the supplied reference website.
-// These are explicitly labelled samples, not recordings of Fermata events.
+// Recordings from the Fermata Initiative YouTube channel.
 export const videos = [
-  { id: '7mefYOLnADI', title: 'Like Someone in Love', category: 'Jazz piano', image: '/images/video-jazz.webp' },
-  { id: 'FEHCJHAtehQ', title: 'Rachmaninov, Concerto No. 3', category: 'Classical piano', image: '/images/video-classical.webp' },
-  { id: 'oconJTVC3WI', title: 'The Gardens of Buitenzorg', category: 'Solo piano', image: '/images/video-solo.webp' },
+  { id: '3oLMtCtvWl8', title: 'Fauré — Sicilienne', category: 'Clarinet & piano', image: '/images/video-faure.webp' },
+  { id: 'oyGuQrlzU4Y', title: 'Gerhard Wuensch — Clarinet Dances', category: 'Clarinet & piano', image: '/images/video-wuensch.webp' },
+  { id: 'yq_O0boWw-c', title: 'Chopin — Impromptu', category: 'Solo piano', image: '/images/video-chopin.webp' },
 ];
