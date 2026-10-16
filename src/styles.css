@@ -85,7 +85,7 @@
     top:0;
     bottom:auto;
     transform:translateX(-16%) rotate(45deg);
-    opacity:.06;
+    opacity:.1;
   }
   .hero { min-height:0; padding-top:0; row-gap:32px; }
   .hero-copy {
