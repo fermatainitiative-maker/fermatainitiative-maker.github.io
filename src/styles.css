@@ -75,18 +75,19 @@
   .hero-background {
     display:block;
     inset:auto;
-    top:calc(100% - .28em);
+    top:calc(100% - .85em);
     left:calc(50% - 50vw);
     width:100vw;
     height:min(440px,114vw);
   }
   .hero-background>.fermata-mark {
-    width:min(500px,130vw);
+    width:min(520px,135vw);
     top:0;
     bottom:auto;
     transform:translateX(-16%) rotate(45deg);
+    opacity:.06;
   }
-  .hero { min-height:0; padding-top:0; row-gap:0; }
+  .hero { min-height:0; padding-top:0; row-gap:32px; }
   .hero-copy {
     display:flex;
     flex-direction:column;
@@ -97,14 +98,14 @@
     text-align:center;
   }
   .hero h1 { text-align:center; }
-  .hero-copy>p { margin-inline:auto; }
-  .hero-actions { justify-content:center; }
+  .hero-copy>p { margin-inline:auto; margin-top:36px; }
+  .hero-actions { justify-content:center; margin-top:38px; gap:18px; }
 }
 
 @media (max-width:370px) and (max-height:650px) {
   .hero-copy { padding-block:20px 24px; }
-  .hero-copy>p { margin-top:20px; }
-  .hero-actions { margin-top:24px; }
+  .hero-copy>p { margin-top:26px; }
+  .hero-actions { margin-top:30px; }
 }
 
 /* Our music: one shared selection, with quiet attribution to each venue. */
