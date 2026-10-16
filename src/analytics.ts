@@ -2,6 +2,9 @@
 const paths = new Set(['/', '/about', '/music', '/contact', '/privacy', '/thank-you']);
 const campaignKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_id', 'utm_content', 'utm_term'];
 export const measurementId = 'G-0W1LJTWBZ2';
+export function analyticsEnabled(preference: 'accepted' | 'declined' | null) {
+  return preference !== 'declined';
+}
 export type LeadType = 'volunteer' | 'host' | 'partnership' | 'general';
 export function leadType(value: unknown): LeadType {
   return value === 'volunteer' || value === 'host' || value === 'partnership' ? value : 'general';

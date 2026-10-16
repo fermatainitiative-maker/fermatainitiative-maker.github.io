@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createAnalytics, safePage, safeReferrer } from '../src/analytics.ts';
+import { analyticsEnabled, createAnalytics, safePage, safeReferrer } from '../src/analytics.ts';
+
+test('analytics defaults on without a popup, but respects an existing opt-out', () => {
+  assert.equal(analyticsEnabled(null), true);
+  assert.equal(analyticsEnabled('accepted'), true);
+  assert.equal(analyticsEnabled('declined'), false);
+});
 
 function setup(hostname = 'fermatainitiative.org') {
   const calls: unknown[][] = [];

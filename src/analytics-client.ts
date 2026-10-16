@@ -1,4 +1,4 @@
-import { createAnalytics, measurementId } from './analytics';
+import { analyticsEnabled, createAnalytics, measurementId } from './analytics';
 
 declare global {
   interface Window { dataLayer?: unknown[]; [key: `ga-disable-${string}`]: boolean }
@@ -46,4 +46,4 @@ export function saveConsent(choice: Exclude<Consent, null>) {
   }
 }
 export function openCookieSettings() { window.dispatchEvent(new Event('fermata-cookie-settings')); }
-analytics.setConsent(readConsent() === 'accepted');
+analytics.setConsent(analyticsEnabled(readConsent()));
