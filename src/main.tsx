@@ -111,8 +111,8 @@ function About() {
         <Eyebrow>Our story</Eyebrow>
         <h2>How it started</h2>
         <p className="large-copy">We’re a group of musicians and friends who enjoy sharing the music we love with other people.</p>
-        <p>We organise volunteer concerts in retirement communities and nursing homes across Newfoundland. We play classical repertoire, jazz, and pop in common rooms and halls, and talk about the music and why we enjoy it.</p>
-        <p>A concert is a good reason to get together, hear some live music, and spend a bit of time with other people.</p>
+        <p>We organise volunteer concerts in retirement communities and nursing homes across Newfoundland. We play classical repertoire, jazz, and pop in common rooms and halls, and introduce communities to the reason behind each piece.</p>
+        <p>A concert is the perfect opportunity to get together, hear something new, and spend quality time with others.</p>
         <Link className="text-link" to="/contact?interest=volunteer">Join us <ArrowRight size={18} /></Link>
       </div>
     </section>
