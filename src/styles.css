@@ -69,7 +69,23 @@
   opacity:.085;
 }
 @media (max-width:650px) {
-  .hero-background { display:none; }
+  .hero-section { overflow:clip; }
+  .hero-title-shared { position:relative; }
+  /* Keep the arc beside Shared as the heading reflows on different phones. */
+  .hero-background {
+    display:block;
+    inset:auto;
+    top:calc(100% - .28em);
+    left:calc(50% - 50vw);
+    width:100vw;
+    height:min(440px,114vw);
+  }
+  .hero-background>.fermata-mark {
+    width:min(500px,130vw);
+    top:0;
+    bottom:auto;
+    transform:translateX(-16%) rotate(45deg);
+  }
   .hero { min-height:0; padding-top:0; row-gap:0; }
   .hero-copy {
     display:flex;

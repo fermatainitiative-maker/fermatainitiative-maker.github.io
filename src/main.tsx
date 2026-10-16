@@ -86,9 +86,8 @@ function InvolveBanner() {
 function Home() {
   return <>
     <section className="hero-section">
-      <div className="hero-background" aria-hidden="true"><FermataMark /></div>
       <div className="hero container">
-      <div className="hero-copy"><h1>Music Made{' '}<span className="hero-title-bridge">to be</span>{' '}<span className="hero-title-shared">Shared.</span></h1><p>We bring live, volunteer-led concerts to retirement communities in Newfoundland - creating space to listen, smile, and connect.</p><div className="hero-actions"><Link to="/contact?interest=volunteer" className="button button-primary">Be part of the music <ArrowUpRight size={18} /></Link><Link to="/about" className="text-link">Meet Fermata <ArrowRight size={18} /></Link></div></div>
+      <div className="hero-copy"><h1>Music Made{' '}<span className="hero-title-bridge">to be</span>{' '}<span className="hero-title-shared">Shared.<span className="hero-background" aria-hidden="true"><FermataMark /></span></span></h1><p>We bring live, volunteer-led concerts to retirement communities in Newfoundland - creating space to listen, smile, and connect.</p><div className="hero-actions"><Link to="/contact?interest=volunteer" className="button button-primary">Be part of the music <ArrowUpRight size={18} /></Link><Link to="/about" className="text-link">Meet Fermata <ArrowRight size={18} /></Link></div></div>
       <div className="hero-visual"><div className="hero-photo"><img src="/images/heritage-duet.webp" alt="A pianist and clarinettist sharing live music with retirement community residents" fetchPriority="high" width="1500" height="1000" /></div><div className="photo-caption"><span className="caption-symbol"><MapPin size={24} strokeWidth={1.5} aria-hidden="true" /></span><div><strong>Heritage Square</strong><span className="caption-location">Conception Bay South</span></div></div></div>
       </div>
     </section>
